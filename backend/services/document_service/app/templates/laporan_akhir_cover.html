@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    @page {
+      size: A4;
+      margin: 0;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 210mm;
+      height: 297mm;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .cover-page {
+      width: 210mm;
+      height: 297mm;
+      position: relative;
+      background-image: url("{{ cover_bg_url }}");
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      overflow: hidden;
+    }
+
+    .cover-info-box {
+      position: absolute;
+      top: 75mm;
+      left: 40mm;
+      width: 130mm;
+      min-height: 50mm;
+      background: rgba(255, 255, 255, 0.34);
+      text-align: center;
+      padding: 7mm 8mm 6mm 8mm;
+    }
+
+    .cover-text-title {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      line-height: 1.18;
+      letter-spacing: 0.4px;
+      word-spacing: 1.5px;
+      margin-bottom: 5.2mm;
+      color: #000;
+    }
+
+    .cover-text-oleh {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 15pt;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 4.5mm;
+      color: #000;
+    }
+
+    .cover-text-author {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 15pt;
+      font-weight: 700;
+      line-height: 1.2;
+      color: #000;
+    }
+  </style>
+</head>
+
+<body>
+  {% set ketua = pengusul | selectattr("peran", "equalto", "ketua") | list | first %}
+
+  <div class="cover-page">
+    <div class="cover-info-box">
+      <div class="cover-text-title">
+        {{ judul_penelitian or judul or "Judul Penelitian" }}
+      </div>
+
+      <div class="cover-text-oleh">oleh</div>
+
+      <div class="cover-text-author">
+        {% if ketua %}
+          {{ ketua.nama }}<br />
+          {{ ketua.nidn_nip_nim or "" }}
+        {% else %}
+          Nama&nbsp;&nbsp;&nbsp;NIDN
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</body>
+</html>

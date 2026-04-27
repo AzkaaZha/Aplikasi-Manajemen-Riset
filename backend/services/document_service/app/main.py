@@ -1,51 +1,27 @@
 from fastapi import FastAPI
-from fastapi.openapi.utils import get_openapi
-
 from app.core.config import APP_NAME
-from app.api.routes.health import router as health_router
-from app.api.routes.user import router as user_router
-from app.api.routes.auth import router as auth_router
-from app.api.routes.protected import router as protected_router
-from app.models import Role, User
+from app.api.routes import document
+from app.api.routes import document_content
+from app.api.routes import document_preview
+from app.api.routes import document_pdf
+from app.api.routes import document_file
+from app.api.routes import document_admin
+from app.api.routes.budget import router as budget_router
+from app.api.routes.schedule import router as schedule_router
+from app.api.routes.output import router as output_router
+from app.api.routes.researcher import router as researcher_router
+from app.api.routes.partner import router as partner_router
 
 app = FastAPI(title=APP_NAME)
 
-app.include_router(health_router)
-app.include_router(user_router)
-app.include_router(auth_router)
-app.include_router(protected_router)
-
-
-def custom_openapi():
-    if app.openapi_schema:
-        return app.openapi_schema
-
-    openapi_schema = get_openapi(
-        title=app.title,
-        version="1.0.0",
-        description="Auth Service API",
-        routes=app.routes,
-    )
-
-    openapi_schema["components"]["securitySchemes"] = {
-        "BearerAuth": {"type": "http", "scheme": "bearer", "bearerFormat": "JWT"}
-    }
-
-    protected_paths = [
-        "/auth/me",
-        "/protected/admin-only",
-        "/protected/dosen-or-admin",
-        "/users/",
-        "/users/{user_id}",
-    ]
-
-    for path in openapi_schema["paths"]:
-        for method in openapi_schema["paths"][path]:
-            if path in protected_paths:
-                openapi_schema["paths"][path][method]["security"] = [{"BearerAuth": []}]
-
-    app.openapi_schema = openapi_schema
-    return app.openapi_schema
-
-
-app.openapi = custom_openapi
+app.include_router(document.router)
+app.include_router(document_content.router)
+app.include_router(document_preview.router)
+app.include_router(document_pdf.router)
+app.include_router(document_file.router)
+app.include_router(document_admin.router)
+app.include_router(budget_router)
+app.include_router(schedule_router)
+app.include_router(output_router)
+app.include_router(researcher_router)
+app.include_router(partner_router)

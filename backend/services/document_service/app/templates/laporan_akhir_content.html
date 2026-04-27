@@ -1,0 +1,725 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    color: #000;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 14pt;
+    line-height: 1.5;
+    font-stretch: normal;
+    letter-spacing: 0.25px;
+    word-spacing: 1.2px;
+    text-rendering: optimizeLegibility;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .page-break {
+    page-break-before: always;
+  }
+
+  .avoid-break {
+    page-break-inside: avoid;
+  }
+
+  .center {
+    text-align: center;
+  }
+
+  .bold {
+    font-weight: bold;
+  }
+
+  h1, h2 {
+    margin: 0 0 11mm 0;
+    padding: 0;
+    text-align: center;
+    font-size: 16pt;
+    font-weight: bold;
+    line-height: 1.25;
+    letter-spacing: 0.2px;
+    word-spacing: 1.2px;
+  }
+
+  h3 {
+    margin: 7mm 0 3.5mm 0;
+    padding: 0;
+    font-size: 16pt;
+    font-weight: bold;
+    line-height: 1.25;
+    letter-spacing: 0.2px;
+    word-spacing: 1.2px;
+  }
+
+  h4 {
+    margin: 5.5mm 0 3mm 0;
+    padding: 0;
+    font-size: 14pt;
+    font-weight: bold;
+    line-height: 1.25;
+    letter-spacing: 0.2px;
+    word-spacing: 1.2px;
+  }
+
+  p {
+    margin: 0 0 4mm 0;
+    padding: 0;
+    font-size: 14pt;
+    line-height: 1.55;
+    letter-spacing: 0.25px;
+    word-spacing: 1.2px;
+    text-align: justify;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 3.5mm 0 6.5mm 0;
+    font-size: 14pt;
+    line-height: 1.4;
+    letter-spacing: 0.2px;
+    word-spacing: 0.8px;
+  }
+
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+
+  th, td {
+    border: 1px solid #000;
+    padding: 2.6mm 2.2mm;
+    vertical-align: top;
+    line-height: 1.35;
+    letter-spacing: 0.2px;
+    word-spacing: 0.8px;
+  }
+
+  th {
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .approval-title {
+    margin: 0 0 7mm 0;
+    text-align: center;
+    font-size: 14pt;
+    font-weight: bold;
+    line-height: 1.25;
+    letter-spacing: 0.2px;
+    word-spacing: 1.2px;
+  }
+
+  .approval-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    font-size: 14pt;
+    line-height: 1.25;
+  }
+
+  .approval-table td {
+    border: none;
+    padding: 0.75mm 0.6mm;
+    line-height: 1.25;
+    vertical-align: top;
+  }
+
+  .approval-no {
+    width: 7mm;
+  }
+
+  .approval-label {
+    width: 54mm;
+  }
+
+  .approval-colon {
+    width: 4mm;
+    text-align: center;
+  }
+
+  .approval-list {
+    margin: 0;
+    padding-left: 6mm;
+  }
+
+  .approval-list div {
+    margin: 0 0 0.4mm 0;
+    line-height: 1.2;
+  }
+
+  .signature-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8mm;
+    font-size: 12pt;
+    line-height: 1.2;
+  }
+
+  .signature-table td {
+    width: 50%;
+    border: none;
+    padding: 0;
+    text-align: center;
+    vertical-align: top;
+    line-height: 1.2;
+  }
+
+  .signature-space {
+    height: 24mm;
+  }
+
+  .known-block {
+    margin-top: 6mm;
+    text-align: center;
+    font-size: 12pt;
+    line-height: 1.2;
+  }
+
+  .known-space {
+    height: 18mm;
+  }
+
+  .toc-title {
+    text-align: center;
+    font-size: 14pt;
+    font-weight: bold;
+    margin-bottom: 9mm;
+  }
+
+  .toc-row {
+    margin-bottom: 2.2mm;
+    font-size: 12pt;
+    line-height: 1.4;
+    letter-spacing: 0.2px;
+    word-spacing: 1.2px;
+  }
+
+  .toc-sub {
+    padding-left: 8mm;
+  }
+
+  .identity-table th,
+  .identity-table td {
+    padding: 2.6mm 2.2mm;
+    font-size: 12pt;
+    line-height: 1.35;
+  }
+
+  .output-table th,
+  .output-table td,
+  .budget-table th,
+  .budget-table td {
+    padding: 2.4mm 2mm;
+    font-size: 11pt;
+    line-height: 1.3;
+  }
+
+  .schedule-block {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    margin-top: 7mm;
+  }
+
+  .schedule-table {
+    width: 100%;
+    table-layout: fixed;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    font-size: 10.5pt;
+    line-height: 1.2;
+  }
+
+  .schedule-table th,
+  .schedule-table td {
+    padding: 2mm 1mm;
+    text-align: center;
+    font-size: 10.5pt;
+    line-height: 1.2;
+    word-break: normal;
+    overflow-wrap: normal;
+  }
+
+  .schedule-table .activity {
+    text-align: left;
+    word-break: normal;
+    overflow-wrap: break-word;
+  }
+
+  .section-note {
+    margin: 0 0 4mm 0;
+    font-size: 12pt;
+    line-height: 1.45;
+    text-align: justify;
+    letter-spacing: 0.25px;
+    word-spacing: 1.2px;
+  }
+
+  .currency {
+    white-space: nowrap;
+    letter-spacing: 0;
+    word-spacing: 0;
+  }
+</style>
+</head>
+
+<body>
+  {% macro money(value) -%}
+    {%- if value is not none and value != "" and value != "-" -%}
+      {%- set n = value|float -%}
+      Rp.{{ "{:,.2f}".format(n).replace(",", "X").replace(".", ",").replace("X", ".") }}
+    {%- else -%}
+      -
+    {%- endif -%}
+  {%- endmacro %}
+
+  {% macro roman(num) -%}
+    {%- set romans = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"] -%}
+    {{- romans[num] if num < romans|length else num -}}
+  {%- endmacro %}
+
+  {% set ketua = pengusul | selectattr("peran", "equalto", "ketua") | list | first %}
+  {% set anggota = pengusul | rejectattr("peran", "equalto", "ketua") | list %}
+  {% set luaran_wajib = luaran | selectattr("kategori_luaran", "equalto", "wajib") | list %}
+  {% set luaran_tambahan = luaran | rejectattr("kategori_luaran", "equalto", "wajib") | list %}
+
+  <!-- HALAMAN PENGESAHAN -->
+  <div class="page-break"></div>
+
+  <div class="approval-title">
+    HALAMAN PENGESAHAN<br />
+    LAPORAN PENELITIAN
+  </div>
+
+  <table class="approval-table">
+    <tr>
+      <td class="approval-no">1.</td>
+      <td class="approval-label">a. Judul Penelitian</td>
+      <td class="approval-colon">:</td>
+      <td>{{ judul_penelitian or judul or "-" }}</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>b. Bidang Fokus</td>
+      <td class="approval-colon">:</td>
+      <td>{{ bidang_fokus_rirn or "-" }}</td>
+    </tr>
+
+    <tr><td colspan="4" style="height: 2mm;"></td></tr>
+
+    <tr>
+      <td>2.</td>
+      <td colspan="3">Ketua Peneliti</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>a. Nama Lengkap</td>
+      <td class="approval-colon">:</td>
+      <td>{{ ketua.nama if ketua else "-" }}</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>b. Jenis Kelamin</td>
+      <td class="approval-colon">:</td>
+      <td>{{ ketua.jenis_kelamin if ketua and ketua.jenis_kelamin is defined else "-" }}</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>c. NIDN/NIP</td>
+      <td class="approval-colon">:</td>
+      <td>{{ ketua.nidn_nip_nim if ketua else "-" }}</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>d. Jabatan Fungsional</td>
+      <td class="approval-colon">:</td>
+      <td>{{ ketua.jabatan_fungsional if ketua and ketua.jabatan_fungsional is defined else "-" }}</td>
+    </tr>
+
+    {% if anggota %}
+      {% for a in anggota %}
+        <tr><td colspan="4" style="height: 1mm;"></td></tr>
+        <tr>
+          <td>{{ loop.index + 2 }}.</td>
+          <td colspan="3">Anggota Peneliti {{ roman(loop.index) }}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>a. Nama Lengkap</td>
+          <td class="approval-colon">:</td>
+          <td>{{ a.nama or "-" }}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Jenis Kelamin</td>
+          <td class="approval-colon">:</td>
+          <td>{{ a.jenis_kelamin if a.jenis_kelamin is defined else "-" }}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>NIDN/NIP/NIM</td>
+          <td class="approval-colon">:</td>
+          <td>{{ a.nidn_nip_nim or "-" }}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Jabatan Fungsional</td>
+          <td class="approval-colon">:</td>
+          <td>{{ a.jabatan_fungsional if a.jabatan_fungsional is defined else "-" }}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Program Studi</td>
+          <td class="approval-colon">:</td>
+          <td>{{ a.program_studi or "-" }}</td>
+        </tr>
+      {% endfor %}
+    {% endif %}
+
+    {% set base_no = 2 + (anggota|length) %}
+
+    <tr><td colspan="4" style="height: 1mm;"></td></tr>
+    <tr>
+      <td>{{ base_no + 1 }}.</td>
+      <td>Lama Penelitian</td>
+      <td class="approval-colon">:</td>
+      <td>{{ lama_penelitian or "-" }}</td>
+    </tr>
+    <tr>
+      <td>{{ base_no + 2 }}.</td>
+      <td>Hasil Penelitian*</td>
+      <td class="approval-colon">:</td>
+      <td>
+        {% set hasil_pilihan = parent_contents.hasil_penelitian_pilihan or [] %}
+        {% if hasil_pilihan %}
+          <div class="approval-list">
+            {% for item in hasil_pilihan %}
+              <div>{{ ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"][loop.index0] }}. {{ item }}</div>
+            {% endfor %}
+          </div>
+        {% else %}
+          -
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td>{{ base_no + 3 }}.</td>
+      <td>Dana Penelitian yang dikeluarkan</td>
+      <td class="approval-colon">:</td>
+      <td><span class="currency">{{ money(dana_penelitian) }}</span></td>
+    </tr>
+  </table>
+
+  <table class="signature-table">
+    <tr>
+      <td>
+        Menyetujui,<br />
+        Plt. Ketua LPPM STT Terpadu Nurul Fikri
+        <div class="signature-space"></div>
+        <b>Muh Syaiful Romadhon, S.Kom., M.Kom.</b><br />
+        NIP. 1220198101
+      </td>
+      <td>
+        Depok, ……………….<br />
+        Ketua Peneliti,
+        <div class="signature-space"></div>
+        <b>{{ ketua.nama if ketua else "(……………………………..)" }}</b>
+      </td>
+    </tr>
+  </table>
+
+  <div class="known-block">
+    Mengetahui,<br />
+    Ketua STT Terpadu Nurul Fikri
+    <div class="signature-space"></div>
+    <b>Dr. Lukman Rosyidi, M.M., M.T.</b><br />
+    NIDN 0421117805
+  </div>
+
+  <!-- PRAKATA -->
+  <div class="page-break"></div>
+
+  <h2>PRAKATA</h2>
+
+  {% if contents.prakata %}
+    <p>{{ contents.prakata }}</p>
+  {% else %}
+    <p>
+      Bismillahirrohmanirrohim. Alhamdulillah segala puji bagi Allah SWT,
+      yang telah melimpahkan rahmat dan ridho-Nya sehingga laporan penelitian
+      dengan judul: {{ judul_penelitian or judul or "-" }} dapat diselesaikan dengan baik.
+    </p>
+    <p>
+      Peneliti menyadari bahwa penyusunan penelitian ini tidak lepas dari bimbingan,
+      dorongan dan bantuan dari berbagai pihak. Pada kesempatan ini peneliti menyampaikan
+      terima kasih dan penghargaan yang setinggi-tingginya kepada seluruh pihak yang telah membantu.
+    </p>
+    <p>
+      Tim peneliti menyadari bahwa dalam menyusun laporan penelitian ini masih terdapat banyak
+      kekurangan. Untuk itu, peneliti mengharapkan kritik dan saran yang membangun demi
+      kesempurnaan penulisan laporan penelitian ini. Semoga penelitian ini dapat bermanfaat
+      bagi masyarakat luas.
+    </p>
+  {% endif %}
+
+  <p style="text-align: left; margin-top: 8mm;">
+    Depok, ……………….<br />
+    Ketua Peneliti,
+  </p>
+
+  <p style="text-align: left; margin-top: 18mm;">
+    <b>{{ ketua.nama if ketua else "(………………………..)" }}</b><br />
+    NIDN {{ ketua.nidn_nip_nim if ketua else "" }}
+  </p>
+
+  <!-- DAFTAR ISI -->
+  <div class="page-break"></div>
+
+  <div class="toc-title">DAFTAR ISI</div>
+  <div class="toc-row">HALAMAN PENGESAHAN</div>
+  <div class="toc-row">PRAKATA</div>
+  <div class="toc-row">DAFTAR ISI</div>
+  <div class="toc-row">A. IDENTITAS PENELITIAN</div>
+  <div class="toc-row toc-sub">1. JUDUL PENELITIAN</div>
+  <div class="toc-row toc-sub">2. IDENTITAS PENGUSUL</div>
+  <div class="toc-row toc-sub">3. MITRA KERJASAMA PENELITIAN</div>
+  <div class="toc-row toc-sub">4. LUARAN DAN TARGET CAPAIAN</div>
+  <div class="toc-row toc-sub">5. ANGGARAN</div>
+  <div class="toc-row">B. HASIL PENELITIAN</div>
+  <div class="toc-row toc-sub">1. RINGKASAN</div>
+  <div class="toc-row toc-sub">2. LATAR BELAKANG</div>
+  <div class="toc-row toc-sub">3. TINJAUAN PUSTAKA</div>
+  <div class="toc-row toc-sub">4. METODE</div>
+  <div class="toc-row toc-sub">5. JADWAL</div>
+  <div class="toc-row toc-sub">6. HASIL PELAKSANAAN PENELITIAN</div>
+  <div class="toc-row toc-sub">7. STATUS LUARAN</div>
+  <div class="toc-row toc-sub">8. PERAN MITRA</div>
+  <div class="toc-row toc-sub">9. KENDALA PELAKSANAAN PENELITIAN</div>
+  <div class="toc-row toc-sub">10. RENCANA TINDAK LANJUT PENELITIAN</div>
+  <div class="toc-row toc-sub">11. DAFTAR PUSTAKA</div>
+  <div class="toc-row">C. LAMPIRAN</div>
+
+  <!-- A. IDENTITAS PENELITIAN -->
+  <div class="page-break"></div>
+
+  <h2>A. IDENTITAS PENELITIAN</h2>
+
+  <h3>1. Judul Penelitian</h3>
+  <p>{{ judul_penelitian or judul or "-" }}</p>
+
+  <h3>2. Identitas Pengusul</h3>
+  <table class="identity-table">
+    <tr>
+      <th style="width: 20%;">Nama, Peran</th>
+      <th style="width: 18%;">Perguruan Tinggi/ Institusi</th>
+      <th style="width: 17%;">Program Studi/ Bagian</th>
+      <th style="width: 25%;">Bidang Tugas</th>
+      <th style="width: 10%;">ID Sinta</th>
+      <th style="width: 10%;">H-Index</th>
+    </tr>
+    {% if pengusul %}
+      {% for p in pengusul %}
+        <tr>
+          <td>{{ p.nama or "-" }}<br />{{ p.peran or "-" }}</td>
+          <td>{{ p.institusi or "-" }}</td>
+          <td>{{ p.program_studi or "-" }}</td>
+          <td>{{ p.bidang_tugas or "-" }}</td>
+          <td>{{ p.id_sinta or "-" }}</td>
+          <td>{{ p.h_index or "-" }}</td>
+        </tr>
+      {% endfor %}
+    {% else %}
+      <tr>
+        <td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+      </tr>
+    {% endif %}
+  </table>
+
+  <h3>3. Mitra Kerjasama Penelitian</h3>
+  <table class="identity-table">
+    <tr>
+      <th style="width: 35%;">Mitra</th>
+      <th>Nama Mitra</th>
+    </tr>
+    {% if mitra %}
+      {% for m in mitra %}
+        <tr>
+          <td>{{ m.jenis_mitra or "-" }}</td>
+          <td>{{ m.nama_mitra or "-" }}</td>
+        </tr>
+      {% endfor %}
+    {% else %}
+      <tr><td>-</td><td>-</td></tr>
+    {% endif %}
+  </table>
+
+  <h3>4. Luaran dan Target Capaian</h3>
+
+  <h3>4.1 Luaran Wajib</h3>
+  <table class="output-table">
+    <tr>
+      <th style="width: 17%;">Tahun Luaran</th>
+      <th style="width: 24%;">Jenis Luaran</th>
+      <th style="width: 29%;">Status Target Capaian</th>
+      <th>Keterangan</th>
+    </tr>
+    {% if luaran_wajib %}
+      {% for l in luaran_wajib %}
+        <tr>
+          <td>{{ l.tahun_luaran or "-" }}</td>
+          <td>{{ l.jenis_luaran or "-" }}</td>
+          <td>{{ l.status_target or "-" }}</td>
+          <td>{{ l.keterangan or "-" }}</td>
+        </tr>
+      {% endfor %}
+    {% else %}
+      <tr><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+    {% endif %}
+  </table>
+
+  <h3>4.2 Luaran Tambahan</h3>
+  <table class="output-table">
+    <tr>
+      <th style="width: 17%;">Tahun Luaran</th>
+      <th style="width: 24%;">Jenis Luaran</th>
+      <th style="width: 29%;">Status Target Capaian</th>
+      <th>Keterangan</th>
+    </tr>
+    {% if luaran_tambahan %}
+      {% for l in luaran_tambahan %}
+        <tr>
+          <td>{{ l.tahun_luaran or "-" }}</td>
+          <td>{{ l.jenis_luaran or "-" }}</td>
+          <td>{{ l.status_target or "-" }}</td>
+          <td>{{ l.keterangan or "-" }}</td>
+        </tr>
+      {% endfor %}
+    {% else %}
+      <tr><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+    {% endif %}
+  </table>
+
+  <h3>5. Anggaran</h3>
+  <table class="output-table">
+    <tr>
+      <th style="width: 21%;">Jenis Pembelanjaan</th>
+      <th style="width: 28%;">Item</th>
+      <th style="width: 13%;">Satuan</th>
+      <th style="width: 8%;">Vol.</th>
+      <th style="width: 15%;">Biaya Satuan</th>
+      <th style="width: 15%;">Total</th>
+    </tr>
+    {% if anggaran %}
+      {% for a in anggaran %}
+        <tr>
+          <td>{{ a.jenis_pembelanjaan or "-" }}</td>
+          <td>{{ a.item or "-" }}</td>
+          <td>{{ a.satuan or "-" }}</td>
+          <td>{{ a.volume or "-" }}</td>
+          <td class="currency">{{ money(a.biaya_satuan) }}</td>
+          <td class="currency">{{ money(a.total) }}</td>
+        </tr>
+      {% endfor %}
+    {% else %}
+      <tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+    {% endif %}
+  </table>
+
+  <!-- B. HASIL PENELITIAN -->
+  <div class="page-break"></div>
+
+  <h2>B. HASIL PENELITIAN</h2>
+
+  <h3>1. Ringkasan</h3>
+  <p>{{ contents.ringkasan or progress_contents.ringkasan or ringkasan or "-" }}</p>
+
+  <p><b>Kata kunci:</b> {{ contents.kata_kunci or kata_kunci or "-" }}</p>
+
+  <h3>2. Latar Belakang</h3>
+  <p>{{ contents.latar_belakang or latar_belakang or "-" }}</p>
+
+  <h3>3. Tinjauan Pustaka</h3>
+  <p>{{ contents.tinjauan_pustaka or tinjauan_pustaka or "-" }}</p>
+
+  <h3>4. Metode</h3>
+  <p>{{ contents.metode or metode_penelitian or "-" }}</p>
+
+  <div class="schedule-block avoid-break">
+    <h3>5. Jadwal</h3>
+    <table class="schedule-table">
+      <colgroup>
+        <col style="width: 8%" />
+        <col style="width: 24%" />
+        <col span="12" style="width: 5.666%" />
+      </colgroup>
+      <tr>
+        <th rowspan="2">No</th>
+        <th rowspan="2">Nama Kegiatan</th>
+        <th colspan="12">Bulan</th>
+      </tr>
+      <tr>
+        <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th>
+        <th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th>
+      </tr>
+      {% if jadwal %}
+        {% for j in jadwal %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td class="activity">{{ j.nama_kegiatan or "-" }}</td>
+            <td>{% if j.bulan_1 == 1 %}✓{% endif %}</td>
+            <td>{% if j.bulan_2 == 1 %}✓{% endif %}</td>
+            <td>{% if j.bulan_3 == 1 %}✓{% endif %}</td>
+            <td>{% if j.bulan_4 == 1 %}✓{% endif %}</td>
+            <td>{% if j.bulan_5 == 1 %}✓{% endif %}</td>
+            <td>{% if j.bulan_6 == 1 %}✓{% endif %}</td>
+            <td>{% if j.bulan_7 == 1 %}✓{% endif %}</td>
+            <td>{% if j.bulan_8 == 1 %}✓{% endif %}</td>
+            <td>{% if j.bulan_9 == 1 %}✓{% endif %}</td>
+            <td>{% if j.bulan_10 == 1 %}✓{% endif %}</td>
+            <td>{% if j.bulan_11 == 1 %}✓{% endif %}</td>
+            <td>{% if j.bulan_12 == 1 %}✓{% endif %}</td>
+          </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td>1</td>
+          <td class="activity">-</td>
+          <td></td><td></td><td></td><td></td><td></td><td></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+      {% endif %}
+    </table>
+  </div>
+
+  <h3>6. Hasil Pelaksanaan Penelitian</h3>
+  <p>{{ contents.hasil_pelaksanaan_penelitian or progress_contents.hasil_penelitian or "-" }}</p>
+
+  <h3>7. Status Luaran</h3>
+  <p>{{ contents.status_luaran or progress_contents.status_luaran or "-" }}</p>
+
+  <h3>8. Peran Mitra</h3>
+  <p>{{ contents.peran_mitra or progress_contents.peran_mitra or "-" }}</p>
+
+  <h3>9. Kendala Pelaksanaan Penelitian</h3>
+  <p>{{ contents.kendala_pelaksanaan or progress_contents.kendala_pelaksanaan or "-" }}</p>
+
+  <h3>10. Rencana Tindak Lanjut Penelitian</h3>
+  <p>{{ contents.rencana_tindak_lanjut or progress_contents.rencana_tahapan_selanjutnya or "-" }}</p>
+
+  <h3>11. Daftar Pustaka</h3>
+  <p>{{ contents.daftar_pustaka or progress_contents.daftar_pustaka or daftar_pustaka or "-" }}</p>
+
+  <!-- C. LAMPIRAN -->
+  <div class="page-break"></div>
+
+  <h2>C. Lampiran</h2>
+
+  <p>{{ contents.lampiran or progress_contents.lampiran or "-" }}</p>
+</body>
+</html>

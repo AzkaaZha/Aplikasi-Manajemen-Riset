@@ -1,0 +1,24 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background: rgba(0, 0, 0, 0.4); /* efek gelap */
+
+  z-index: 1040;
+
+  opacity: 0;
+  animation: fadeIn 0.25s ease forwards;
+}
+
+/* animasi fade */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

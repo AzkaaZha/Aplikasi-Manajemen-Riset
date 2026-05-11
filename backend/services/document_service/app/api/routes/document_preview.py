@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.dependencies.auth import get_current_user
+from app.api.routes.document_helper import get_owned_document_or_404
 from app.models.document import Document
 from app.models.template_field import TemplateField
 from app.models.document_content import DocumentContent
@@ -13,6 +14,21 @@ from app.models.partner import Partner
 from app.schemas.document_full import DocumentFullDetailResponse
 from app.schemas.document_preview import DocumentPreviewResponse
 import json
+import re
+
+def parse_basic_markdown(text):
+    if not isinstance(text, str):
+        return text
+    text = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', text)
+    text = re.sub(r'\*(.*?)\*', r'<i>\1</i>', text)
+    return text
+
+def strip_html(text):
+    if not isinstance(text, str):
+        return text
+    text = re.sub(r'<[^>]+>', '', text)
+    text = text.replace('&nbsp;', ' ').strip()
+    return text
 
 router = APIRouter(prefix="/documents", tags=["Documents"])
 
@@ -22,14 +38,7 @@ def get_document_full_detail(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
-    document = (
-        db.query(Document)
-        .filter(Document.id == document_id, Document.user_id == int(current_user["id"]))
-        .first()
-    )
-
-    if not document:
-        raise HTTPException(status_code=404, detail="Dokumen tidak ditemukan")
+    document = get_owned_document_or_404(db, document_id, current_user)
 
     fields = (
         db.query(TemplateField)
@@ -127,14 +136,7 @@ def get_document_preview(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
-    document = (
-        db.query(Document)
-        .filter(Document.id == document_id, Document.user_id == int(current_user["id"]))
-        .first()
-    )
-
-    if not document:
-        raise HTTPException(status_code=404, detail="Dokumen tidak ditemukan")
+    document = get_owned_document_or_404(db, document_id, current_user)
 
     current_contents = get_content_by_key(db, document)
 
@@ -144,13 +146,27 @@ def get_document_preview(
     progress_document = None
     progress_contents = {}
 
-    if document.jenis_dokumen_id == 3 and document.parent_dokumen_id:
+    if document.jenis_dokumen_id in [2, 3]:
+        # Jika dokumen adalah laporan kemajuan atau laporan akhir, parent_document adalah proposal
+        parent_document = (
+            db.query(Document)
+            .filter(
+                Document.penelitian_id == document.penelitian_id,
+                Document.jenis_dokumen_id == 1,
+            )
+            .first()
+        )
+
+        if parent_document:
+            parent_contents = get_content_by_key(db, parent_document)
+            
+    if document.jenis_dokumen_id == 3:
+        # Jika dokumen adalah laporan akhir, ambil juga laporan kemajuan jika ada
         progress_document = (
             db.query(Document)
             .filter(
-                Document.parent_dokumen_id == document.parent_dokumen_id,
+                Document.penelitian_id == document.penelitian_id,
                 Document.jenis_dokumen_id == 2,
-                Document.user_id == int(current_user["id"]),
             )
             .order_by(Document.created_at.desc())
             .first()
@@ -158,19 +174,6 @@ def get_document_preview(
 
         if progress_document:
             progress_contents = get_content_by_key(db, progress_document)
-
-    if document.parent_dokumen_id:
-        parent_document = (
-            db.query(Document)
-            .filter(
-                Document.id == document.parent_dokumen_id,
-                Document.user_id == int(current_user["id"]),
-            )
-            .first()
-        )
-
-        if parent_document:
-            parent_contents = get_content_by_key(db, parent_document)
 
     source_document = parent_document if parent_document else document
     source_contents = parent_contents if parent_document else current_contents
@@ -205,6 +208,8 @@ def get_document_preview(
         .all()
     )
 
+    total_budget = sum([b.total for b in budgets]) if budgets else 0
+
     return {
         "judul": document.judul,
         "status_dokumen": document.status_dokumen,
@@ -215,20 +220,20 @@ def get_document_preview(
         "contents": current_contents,
         "parent_contents": parent_contents,
 
-        "judul_penelitian": source_contents.get("judul_penelitian") or source_document.judul,
-        "bidang_fokus_rirn": source_contents.get("bidang_fokus_rirn"),
-        "tema_penelitian": source_contents.get("tema_penelitian"),
-        "topik_penelitian": source_contents.get("topik_penelitian"),
-        "rumpun_bidang_ilmu": source_contents.get("rumpun_bidang_ilmu"),
-        "target_akhir_tkt": source_contents.get("target_akhir_tkt"),
-        "lama_penelitian": source_contents.get("lama_penelitian"),
-        "dana_penelitian": source_contents.get("dana_penelitian"),
-        "ringkasan": source_contents.get("ringkasan"),
-        "kata_kunci": source_contents.get("kata_kunci"),
-        "latar_belakang": source_contents.get("latar_belakang"),
-        "tinjauan_pustaka": source_contents.get("tinjauan_pustaka"),
-        "metode_penelitian": source_contents.get("metode_penelitian"),
-        "daftar_pustaka": source_contents.get("daftar_pustaka"),
+        "judul_penelitian": strip_html(source_contents.get("judul_penelitian")) or source_document.judul,
+        "bidang_fokus_rirn": strip_html(source_contents.get("bidang_fokus_rirn")),
+        "tema_penelitian": strip_html(source_contents.get("tema_penelitian")),
+        "topik_penelitian": strip_html(source_contents.get("topik_penelitian")),
+        "rumpun_bidang_ilmu": strip_html(source_contents.get("rumpun_bidang_ilmu")),
+        "target_akhir_tkt": strip_html(source_contents.get("target_akhir_tkt")),
+        "lama_penelitian": strip_html(source_contents.get("lama_penelitian")),
+        "dana_penelitian": total_budget,
+        "ringkasan": parse_basic_markdown(source_contents.get("ringkasan")),
+        "kata_kunci": parse_basic_markdown(source_contents.get("kata_kunci")),
+        "latar_belakang": parse_basic_markdown(source_contents.get("latar_belakang")),
+        "tinjauan_pustaka": parse_basic_markdown(source_contents.get("tinjauan_pustaka")),
+        "metode_penelitian": parse_basic_markdown(source_contents.get("metode_penelitian")),
+        "daftar_pustaka": parse_basic_markdown(source_contents.get("daftar_pustaka")),
 
         "pengusul": researchers,
         "mitra": partners,

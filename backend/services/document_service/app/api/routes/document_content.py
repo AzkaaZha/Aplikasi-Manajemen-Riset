@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.dependencies.auth import get_current_user
+from app.api.routes.document_helper import get_owned_document_or_404
 from app.models.document import Document
 from app.models.document_content import DocumentContent
 from app.models.template_field import TemplateField
@@ -11,6 +12,19 @@ from app.schemas.document_content import (
     DocumentContentResponse,
 )
 from app.schemas.document_validation import DocumentValidationResponse, MissingFieldItem
+import bleach
+
+ALLOWED_TAGS = [
+    'p', 'br', 'strong', 'b', 'em', 'i', 'u', 'ul', 'ol', 'li',
+    'h1', 'h2', 'h3', 'blockquote', 'table', 'thead', 'tbody',
+    'tr', 'td', 'th', 'a', 'img'
+]
+
+ALLOWED_ATTRIBUTES = {
+    '*': ['style', 'class'],
+    'a': ['href', 'title', 'target'],
+    'img': ['src', 'alt', 'width', 'height']
+}
 
 router = APIRouter(prefix="/documents", tags=["Documents"])
 
@@ -20,14 +34,7 @@ def get_document_fields(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
-    document = (
-        db.query(Document)
-        .filter(Document.id == document_id, Document.user_id == int(current_user["id"]))
-        .first()
-    )
-
-    if not document:
-        raise HTTPException(status_code=404, detail="Dokumen tidak ditemukan")
+    document = get_owned_document_or_404(db, document_id, current_user)
 
     fields = (
         db.query(TemplateField)
@@ -45,14 +52,10 @@ def save_document_contents(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
-    document = (
-        db.query(Document)
-        .filter(Document.id == document_id, Document.user_id == int(current_user["id"]))
-        .first()
-    )
-
-    if not document:
-        raise HTTPException(status_code=404, detail="Dokumen tidak ditemukan")
+    document = get_owned_document_or_404(db, document_id, current_user)
+    
+    # Import Research locally or at module level (assuming app.models.research.Research)
+    from app.models.research import Research
 
     for item in payload.items:
         field = (
@@ -69,6 +72,14 @@ def save_document_contents(
                 status_code=400,
                 detail=f"Template field id {item.template_field_id} tidak valid untuk dokumen ini",
             )
+            
+        # Sanitize HTML isi
+        sanitized_isi = bleach.clean(
+            item.isi,
+            tags=ALLOWED_TAGS,
+            attributes=ALLOWED_ATTRIBUTES,
+            strip=True
+        ) if item.isi else item.isi
 
         existing_content = (
             db.query(DocumentContent)
@@ -80,14 +91,25 @@ def save_document_contents(
         )
 
         if existing_content:
-            existing_content.isi = item.isi
+            existing_content.isi = sanitized_isi
         else:
             new_content = DocumentContent(
                 dokumen_id=document_id,
                 template_field_id=item.template_field_id,
-                isi=item.isi,
+                isi=sanitized_isi,
             )
             db.add(new_content)
+            
+        # Sync to Research and Document if field is judul_penelitian
+        if field.nama_field == 'judul_penelitian' and sanitized_isi:
+            plain_text_title = bleach.clean(sanitized_isi, tags=[], strip=True)
+            # Remove HTML entities like &nbsp;
+            plain_text_title = plain_text_title.replace('&nbsp;', ' ').strip()
+            
+            research = db.query(Research).filter(Research.id == document.penelitian_id).first()
+            if research:
+                research.judul_penelitian = plain_text_title
+            document.judul = plain_text_title
 
     db.commit()
 
@@ -99,20 +121,36 @@ def get_document_contents(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
-    document = (
-        db.query(Document)
-        .filter(Document.id == document_id, Document.user_id == int(current_user["id"]))
-        .first()
-    )
-
-    if not document:
-        raise HTTPException(status_code=404, detail="Dokumen tidak ditemukan")
+    document = get_owned_document_or_404(db, document_id, current_user)
+    from app.models.research import Research
 
     contents = (
         db.query(DocumentContent)
         .filter(DocumentContent.dokumen_id == document_id)
         .all()
     )
+    
+    # Sync judul_penelitian from Research to the returned contents so form is pre-filled
+    research = db.query(Research).filter(Research.id == document.penelitian_id).first()
+    judul_field = db.query(TemplateField).filter(
+        TemplateField.template_id == document.template_id,
+        TemplateField.nama_field == 'judul_penelitian'
+    ).first()
+
+    if judul_field and research:
+        existing = next((c for c in contents if c.template_field_id == judul_field.id), None)
+        if existing:
+            existing.isi = research.judul_penelitian
+        else:
+            # Append a virtual content so frontend gets it
+            contents.append(
+                DocumentContent(
+                    id=0,
+                    dokumen_id=document_id,
+                    template_field_id=judul_field.id,
+                    isi=research.judul_penelitian
+                )
+            )
 
     return contents
 
@@ -122,11 +160,7 @@ def validate_document(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
-    document = (
-        db.query(Document)
-        .filter(Document.id == document_id, Document.user_id == int(current_user["id"]))
-        .first()
-    )
+    document = get_owned_document_or_404(db, document_id, current_user)
 
     if not document:
         raise HTTPException(status_code=404, detail="Dokumen tidak ditemukan")

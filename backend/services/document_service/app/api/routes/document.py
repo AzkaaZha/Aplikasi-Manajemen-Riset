@@ -2,7 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.dependencies.auth import get_current_user
+from app.api.routes.document_helper import get_owned_document_or_404
 from app.models.document import Document
+from app.models.research import Research
 from app.models.template import Template
 from app.models.file_document import FileDocument
 from app.schemas.document import (
@@ -10,67 +12,10 @@ from app.schemas.document import (
     DocumentResponse,
     UpdateDocumentRequest,
 )
-from app.schemas.document_related import RelatedDocumentsResponse
-from app.schemas.document_package import ResearchPackageResponse
 from datetime import datetime
 import os
 
 router = APIRouter(prefix="/documents", tags=["Documents"])
-
-@router.post("/", response_model=DocumentResponse)
-def create_document(
-    payload: CreateDocumentRequest,
-    db: Session = Depends(get_db),
-    current_user=Depends(get_current_user),
-):
-    if payload.jenis_dokumen_id == 1 and payload.parent_dokumen_id is not None:
-        raise HTTPException(
-            status_code=400,
-            detail="Proposal tidak boleh memiliki dokumen induk",
-        )
-
-    if payload.jenis_dokumen_id in [2, 3] and payload.parent_dokumen_id is None:
-        raise HTTPException(
-            status_code=400,
-            detail="Laporan kemajuan atau laporan akhir harus dibuat dari proposal",
-        )
-
-    if payload.parent_dokumen_id is not None:
-        parent_document = (
-            db.query(Document)
-            .filter(
-                Document.id == payload.parent_dokumen_id,
-                Document.user_id == int(current_user["id"]),
-            )
-            .first()
-        )
-
-        if not parent_document:
-            raise HTTPException(
-                status_code=404,
-                detail="Dokumen induk tidak ditemukan",
-            )
-
-        if parent_document.jenis_dokumen_id != 1:
-            raise HTTPException(
-                status_code=400,
-                detail="Dokumen induk harus berupa proposal",
-            )
-
-    new_document = Document(
-        user_id=int(current_user["id"]),
-        jenis_dokumen_id=payload.jenis_dokumen_id,
-        template_id=payload.template_id,
-        parent_dokumen_id=payload.parent_dokumen_id,
-        judul=payload.judul,
-        status_dokumen="draft",
-    )
-
-    db.add(new_document)
-    db.commit()
-    db.refresh(new_document)
-
-    return new_document
 
 @router.get("/", response_model=list[DocumentResponse])
 def get_my_documents(
@@ -82,221 +27,11 @@ def get_my_documents(
 
     return documents
 
-@router.get("/{proposal_id}/related", response_model=RelatedDocumentsResponse)
-def get_related_documents(
-    proposal_id: int,
-    db: Session = Depends(get_db),
-    current_user=Depends(get_current_user),
-):
-    proposal = (
-        db.query(Document)
-        .filter(
-            Document.id == proposal_id,
-            Document.user_id == int(current_user["id"]),
-            Document.jenis_dokumen_id == 1,
-        )
-        .first()
-    )
+@router.get("/my-documents-placeholder")
+def placeholder():
+    # Placeholder if any other routing relies on it, otherwise deleted.
+    pass
 
-    if not proposal:
-        raise HTTPException(
-            status_code=404,
-            detail="Proposal tidak ditemukan",
-        )
-
-    laporan_kemajuan = (
-        db.query(Document)
-        .filter(
-            Document.parent_dokumen_id == proposal_id,
-            Document.user_id == int(current_user["id"]),
-            Document.jenis_dokumen_id == 2,
-        )
-        .order_by(Document.created_at.desc())
-        .first()
-    )
-
-    laporan_akhir = (
-        db.query(Document)
-        .filter(
-            Document.parent_dokumen_id == proposal_id,
-            Document.user_id == int(current_user["id"]),
-            Document.jenis_dokumen_id == 3,
-        )
-        .order_by(Document.created_at.desc())
-        .first()
-    )
-
-    return {
-        "proposal": proposal,
-        "laporan_kemajuan": laporan_kemajuan,
-        "laporan_akhir": laporan_akhir,
-    }
-
-@router.post("/{proposal_id}/create-progress-report", response_model=DocumentResponse)
-def create_progress_report_from_proposal(
-    proposal_id: int,
-    db: Session = Depends(get_db),
-    current_user=Depends(get_current_user),
-):
-    proposal = (
-        db.query(Document)
-        .filter(
-            Document.id == proposal_id,
-            Document.user_id == int(current_user["id"]),
-            Document.jenis_dokumen_id == 1,
-        )
-        .first()
-    )
-
-    if not proposal:
-        raise HTTPException(
-            status_code=404,
-            detail="Proposal tidak ditemukan",
-        )
-
-    existing_report = (
-        db.query(Document)
-        .filter(
-            Document.parent_dokumen_id == proposal_id,
-            Document.user_id == int(current_user["id"]),
-            Document.jenis_dokumen_id == 2,
-        )
-        .first()
-    )
-
-    if existing_report:
-        raise HTTPException(
-            status_code=400,
-            detail="Laporan kemajuan untuk proposal ini sudah ada",
-        )
-
-    template = get_active_template_or_404(
-        jenis_dokumen_id=2,
-        db=db,
-    )
-
-    new_report = Document(
-        user_id=int(current_user["id"]),
-        jenis_dokumen_id=2,
-        template_id=template.id,
-        parent_dokumen_id=proposal.id,
-        judul=f"Laporan Kemajuan - {proposal.judul}",
-        status_dokumen="draft",
-    )
-
-    db.add(new_report)
-    db.commit()
-    db.refresh(new_report)
-
-    return new_report
-
-@router.post("/{proposal_id}/create-final-report", response_model=DocumentResponse)
-def create_final_report_from_proposal(
-    proposal_id: int,
-    db: Session = Depends(get_db),
-    current_user=Depends(get_current_user),
-):
-    proposal = (
-        db.query(Document)
-        .filter(
-            Document.id == proposal_id,
-            Document.user_id == int(current_user["id"]),
-            Document.jenis_dokumen_id == 1,
-        )
-        .first()
-    )
-
-    if not proposal:
-        raise HTTPException(
-            status_code=404,
-            detail="Proposal tidak ditemukan",
-        )
-
-    existing_report = (
-        db.query(Document)
-        .filter(
-            Document.parent_dokumen_id == proposal_id,
-            Document.user_id == int(current_user["id"]),
-            Document.jenis_dokumen_id == 3,
-        )
-        .first()
-    )
-
-    if existing_report:
-        raise HTTPException(
-            status_code=400,
-            detail="Laporan akhir untuk proposal ini sudah ada",
-        )
-
-    template = get_active_template_or_404(
-        jenis_dokumen_id=3,
-        db=db,
-    )
-
-    new_report = Document(
-        user_id=int(current_user["id"]),
-        jenis_dokumen_id=3,
-        template_id=template.id,
-        parent_dokumen_id=proposal.id,
-        judul=f"Laporan Akhir - {proposal.judul}",
-        status_dokumen="draft",
-    )
-
-    db.add(new_report)
-    db.commit()
-    db.refresh(new_report)
-
-    return new_report
-
-@router.get("/research-packages", response_model=list[ResearchPackageResponse])
-def get_my_research_packages(
-    db: Session = Depends(get_db),
-    current_user=Depends(get_current_user),
-):
-    proposals = (
-        db.query(Document)
-        .filter(
-            Document.user_id == int(current_user["id"]),
-            Document.jenis_dokumen_id == 1,
-        )
-        .order_by(Document.created_at.desc())
-        .all()
-    )
-
-    result = []
-
-    for proposal in proposals:
-        laporan_kemajuan = (
-            db.query(Document)
-            .filter(
-                Document.user_id == int(current_user["id"]),
-                Document.parent_dokumen_id == proposal.id,
-                Document.jenis_dokumen_id == 2,
-            )
-            .order_by(Document.created_at.desc())
-            .first()
-        )
-
-        laporan_akhir = (
-            db.query(Document)
-            .filter(
-                Document.user_id == int(current_user["id"]),
-                Document.parent_dokumen_id == proposal.id,
-                Document.jenis_dokumen_id == 3,
-            )
-            .order_by(Document.created_at.desc())
-            .first()
-        )
-
-        result.append(
-            {
-                "proposal": proposal,
-                "laporan_kemajuan": laporan_kemajuan,
-                "laporan_akhir": laporan_akhir,
-            }
-        )
-
-    return result
 
 @router.get("/{document_id}", response_model=DocumentResponse)
 def get_document_detail(
@@ -304,14 +39,7 @@ def get_document_detail(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
-    document = (
-        db.query(Document)
-        .filter(Document.id == document_id, Document.user_id == int(current_user["id"]))
-        .first()
-    )
-
-    if not document:
-        raise HTTPException(status_code=404, detail="Dokumen tidak ditemukan")
+    document = get_owned_document_or_404(db, document_id, current_user)
 
     return document
 
@@ -388,8 +116,8 @@ def delete_document(
         child_documents = (
             db.query(Document)
             .filter(
-                Document.parent_dokumen_id == document.id,
-                Document.user_id == int(current_user["id"]),
+                Document.penelitian_id == document.penelitian_id,
+                Document.jenis_dokumen_id.in_([2, 3])
             )
             .all()
         )

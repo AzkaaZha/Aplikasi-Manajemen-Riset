@@ -1,0 +1,16 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --color-primary: #3b82f6;
+  --color-secondary: #64748b;
+  --color-background: #f8fafc;
+}
+
+body {
+  background-color: var(--color-background);
+}
+
+.ql-editor {
+  min-height: 200px;
+}

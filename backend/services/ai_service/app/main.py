@@ -61,10 +61,10 @@ async def chat_with_gemini(request: ChatRequest):
 
         # Gunakan model Gemini terbaru (flash series)
         try:
-            model = genai.GenerativeModel('gemini-2.5-flash')
+            model = genai.GenerativeModel('gemini-1.5-flash')
             response = model.generate_content(full_prompt)
         except Exception as e:
-            print(f"Flash 2.5 failed, trying Flash Latest: {e}")
+            print(f"Flash 1.5 failed, trying Flash Latest: {e}")
             model = genai.GenerativeModel('gemini-flash-latest')
             response = model.generate_content(full_prompt)
         

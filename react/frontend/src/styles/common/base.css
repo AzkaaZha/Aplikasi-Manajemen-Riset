@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Inter:wght@300;400;500;600&family=Roboto:wght@300;400;500;600&family=Montserrat:wght@300;400;500;600&display=swap');
+
+:root {
+  --primary-bg: #FFFFFF;
+  --secondary-bg: #DEE6E8;
+  --dark-blue: #0B3141;
+  --hover-bg: #cfd8dc;
+  --green: #02ab4d;
+  --darker-blue: #041e28;
+  --yellow: #ffc107;
+  --maroon: #7a1f2b;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--primary-bg);
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.ql-font-poppins {
+  font-family: 'Poppins', sans-serif;
+}
+
+.ql-font-inter {
+  font-family: 'Inter', sans-serif;
+}
+
+.ql-font-roboto {
+  font-family: 'Roboto', sans-serif;
+}
+
+.ql-font-arial {
+  font-family: Arial, sans-serif;
+}
+
+.ql-font-times-new-roman {
+  font-family: 'Times New Roman', serif;
+}
+
+.ql-font-montserrat {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.ql-toolbar .ql-picker.ql-font .ql-picker-item[data-value="poppins"]::before,
+.ql-toolbar .ql-picker.ql-font .ql-picker-label[data-value="poppins"]::before {
+  content: "Poppins";
+}
+
+.ql-toolbar .ql-picker.ql-font .ql-picker-item[data-value="inter"]::before,
+.ql-toolbar .ql-picker.ql-font .ql-picker-label[data-value="inter"]::before {
+  content: "Inter";
+}
+
+.ql-toolbar .ql-picker.ql-font .ql-picker-item[data-value="roboto"]::before,
+.ql-toolbar .ql-picker.ql-font .ql-picker-label[data-value="roboto"]::before {
+  content: "Roboto";
+}
+
+.ql-toolbar .ql-picker.ql-font .ql-picker-item[data-value="arial"]::before,
+.ql-toolbar .ql-picker.ql-font .ql-picker-label[data-value="arial"]::before {
+  content: "Arial";
+}
+
+.ql-toolbar .ql-picker.ql-font .ql-picker-item[data-value="times-new-roman"]::before,
+.ql-toolbar .ql-picker.ql-font .ql-picker-label[data-value="times-new-roman"]::before {
+  content: "Times New Roman";
+}
+
+.ql-toolbar .ql-picker.ql-font .ql-picker-item[data-value="montserrat"]::before,
+.ql-toolbar .ql-picker.ql-font .ql-picker-label[data-value="montserrat"]::before {
+  content: "Montserrat";
+}
+
+/* Green Buttons */
+.btn-green {
+  background-color: var(--green);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-green:hover {
+  background-color: #028a3e;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(2, 171, 77, 0.2);
+}
+
+.btn-outline-green {
+  background-color: transparent;
+  color: var(--green);
+  border: 1px solid var(--green);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-outline-green:hover {
+  background-color: rgba(2, 171, 77, 0.05);
+  color: #028a3e;
+  border-color: #028a3e;
+}

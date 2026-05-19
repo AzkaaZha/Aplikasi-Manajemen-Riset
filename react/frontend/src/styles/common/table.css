@@ -1,0 +1,119 @@
+/* Global table styles to ensure consistent modern minimal look across the app */
+:root {
+  --table-header-bg: var(--dark-blue);
+  --table-header-color: #ffffff;
+  --table-row-border: #eef2f5;
+  --table-row-hover: rgba(11,49,65,0.04);
+  --table-padding-vertical: 12px;
+  --table-padding-horizontal: 16px;
+  --table-font-size: 14px;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Base table reset */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--table-font-size);
+  color: #212529;
+  background: transparent;
+}
+
+.table thead th, table thead th {
+  background: var(--table-header-bg);
+  color: var(--table-header-color);
+  padding: var(--table-padding-vertical) var(--table-padding-horizontal);
+  text-align: left;
+  font-weight: 600;
+  border: none;
+  vertical-align: middle;
+}
+
+tbody td {
+  padding: var(--table-padding-vertical) var(--table-padding-horizontal);
+  border-bottom: 1px solid var(--table-row-border);
+  vertical-align: middle;
+}
+
+/* Subtle hover */
+tbody tr:hover td {
+  background: var(--table-row-hover);
+  transition: background-color 120ms ease-in-out;
+}
+
+/* Action column buttons spacing */
+.table-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Empty and loading states */
+.table-empty,
+.table-loading {
+  padding: 16px;
+  border: 1px dashed #e9ecef;
+  border-radius: 8px;
+  background: #fff;
+  color: #6c757d;
+  text-align: center;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .table thead th, table thead th {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+  tbody td {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+}
+
+/* Utility: make any table wrapper horizontal scrollable with nice spacing */
+.table-wrapper,
+.research-table-container,
+.custom-table-container,
+.preview-table-wrapper,
+.users-table-wrapper,
+.table-container {
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  /* Changed from hidden to visible to allow dropdowns/popovers to show */
+  overflow: visible;
+}
+
+.table-wrapper {
+  padding: 8px;
+}
+
+.table-wrapper .table-responsive {
+  padding-bottom: 4px;
+}
+
+/* Ensure inputs/selects inside table cells don't overflow */
+.table-wrapper input,
+.table-wrapper select {
+  max-width: 100%;
+}
+
+/* Match existing specific table classes so headers follow the same dark blue style */
+.research-table thead th,
+.custom-table thead th,
+.preview-table thead th,
+.final-table thead th,
+.progress-table thead th,
+.users-table thead th,
+.table-header-custom thead th {
+  background: var(--dark-blue);
+  color: #fff;
+  padding: var(--table-padding-vertical) var(--table-padding-horizontal);
+  border-bottom: none;
+}

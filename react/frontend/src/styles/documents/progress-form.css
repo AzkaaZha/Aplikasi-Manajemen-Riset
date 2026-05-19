@@ -1,0 +1,20 @@
+.progress-section-card {
+  margin-bottom: 24px;
+}
+
+.progress-readonly-card .form-label,
+.progress-section-card .form-label {
+  color: #425466;
+}
+
+.progress-error-text {
+  color: #d63384;
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+.progress-card-note {
+  color: #475569;
+  font-size: 13px;
+  margin-top: 10px;
+}

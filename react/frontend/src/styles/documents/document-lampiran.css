@@ -1,0 +1,94 @@
+/* Lampiran Step Styling */
+
+.lampiran-upload-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    border: 2px dashed #e2e8f0;
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+}
+
+.lampiran-upload-card:hover {
+    border-color: #3b82f6;
+    background: #f8fafc;
+}
+
+.upload-icon {
+    font-size: 3rem;
+    color: #3b82f6;
+    margin-bottom: 1rem;
+}
+
+.upload-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.upload-subtitle {
+    color: #64748b;
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+}
+
+.upload-input-group {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.todo-badge {
+    font-size: 0.65rem;
+    background: #fef3c7;
+    color: #92400e;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    vertical-align: middle;
+    margin-left: 4px;
+}
+
+.lampiran-info-alert {
+    display: flex;
+    gap: 1rem;
+    background: #eff6ff;
+    border-left: 4px solid #3b82f6;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    color: #1e40af;
+    font-size: 0.9rem;
+}
+
+.lampiran-info-alert i {
+    font-size: 1.25rem;
+}
+
+/* Badge Customization */
+.badge-custom {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 6px;
+    text-transform: uppercase;
+}
+
+.badge-outline-primary {
+    color: #3b82f6;
+    border: 1px solid #3b82f6;
+    background: transparent;
+}
+
+/* Form refinement - Removed redundant definitions to use global document-form.css */
+
+/* Button is now using global .btn-add from document-form.css */
+
+/* Responsive Table Adjustments */
+@media (max-width: 768px) {
+    .custom-table-container {
+        overflow-x: auto;
+    }
+}

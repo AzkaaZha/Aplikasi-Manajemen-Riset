@@ -11,8 +11,22 @@ from app.api.routes.schedule import router as schedule_router
 from app.api.routes.output import router as output_router
 from app.api.routes.researcher import router as researcher_router
 from app.api.routes.partner import router as partner_router
+from app.api.routes.research import router as research_router  # ← Router penelitian
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title=APP_NAME)
+origins=[
+    "http://localhost:5173",
+    "http://127.0.0.1:5173"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(document.router)
 app.include_router(document_content.router)
@@ -25,3 +39,6 @@ app.include_router(schedule_router)
 app.include_router(output_router)
 app.include_router(researcher_router)
 app.include_router(partner_router)
+app.include_router(research_router)  # ← Endpoint /researches/
+
+

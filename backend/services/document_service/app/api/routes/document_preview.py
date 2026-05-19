@@ -22,80 +22,120 @@ def get_document_full_detail(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
-    document = (
-        db.query(Document)
-        .filter(Document.id == document_id, Document.user_id == int(current_user["id"]))
-        .first()
-    )
+    try:
+        from sqlalchemy.orm import aliased
+        from app.models.research import Research
+        from app.models.template import Template
 
-    if not document:
-        raise HTTPException(status_code=404, detail="Dokumen tidak ditemukan")
+        # Explicit aliases to prevent ID conflicts (Point 6)
+        dokumen = aliased(Document, name="dokumen")
+        penelitian = aliased(Research, name="penelitian")
+        templates = aliased(Template, name="templates")
 
-    fields = (
-        db.query(TemplateField)
-        .filter(TemplateField.template_id == document.template_id)
-        .order_by(TemplateField.urutan.asc())
-        .all()
-    )
-
-    contents = (
-        db.query(DocumentContent)
-        .filter(DocumentContent.dokumen_id == document_id)
-        .all()
-    )
-
-    content_map = {content.template_field_id: content.isi for content in contents}
-
-    field_items = []
-
-    for field in fields:
-        field_items.append(
-            {
-                "template_field_id": field.id,
-                "nama_field": field.nama_field,
-                "label_field": field.label_field,
-                "tipe_field": field.tipe_field,
-                "wajib": field.wajib,
-                "isi": content_map.get(field.id),
-            }
+        result = (
+            db.query(dokumen, penelitian, templates)
+            .outerjoin(penelitian, dokumen.penelitian_id == penelitian.id)
+            .outerjoin(templates, dokumen.template_id == templates.id)
+            .filter(
+                dokumen.id == document_id,
+                dokumen.user_id == int(current_user["id"])
+            )
+            .first()
         )
 
-    budgets = db.query(Budget).filter(Budget.dokumen_id == document_id).all()
+        if not result:
+            raise HTTPException(status_code=404, detail="Dokumen tidak ditemukan")
 
-    schedules = db.query(Schedule).filter(Schedule.dokumen_id == document_id).all()
+        document, penelitian_obj, template_obj = result
 
-    outputs = db.query(Output).filter(Output.dokumen_id == document_id).all()
+        # Fallback to active template if template_id is null/None/0 (Point 4)
+        resolved_template_id = document.template_id
+        if not resolved_template_id:
+            active_template = (
+                db.query(Template)
+                .filter(
+                    Template.jenis_dokumen_id == document.jenis_dokumen_id,
+                    Template.status_aktif == 1
+                )
+                .order_by(Template.id.desc())
+                .first()
+            )
+            if active_template:
+                resolved_template_id = active_template.id
 
-    researchers = (
-        db.query(Researcher).filter(Researcher.dokumen_id == document_id).all()
-    )
+        # Query TemplateField strictly using the resolved template_id (Point 5)
+        fields = []
+        if resolved_template_id:
+            fields = (
+                db.query(TemplateField)
+                .filter(TemplateField.template_id == resolved_template_id)
+                .order_by(TemplateField.urutan.asc())
+                .all()
+            )
 
-    partners = db.query(Partner).filter(Partner.dokumen_id == document_id).all()
+        contents = (
+            db.query(DocumentContent)
+            .filter(DocumentContent.dokumen_id == document_id)
+            .all()
+        )
 
-    return {
-        "id": document.id,
-        "user_id": document.user_id,
-        "jenis_dokumen_id": document.jenis_dokumen_id,
-        "template_id": document.template_id,
-        "judul": document.judul,
-        "status_dokumen": document.status_dokumen,
-        "terakhir_autosave": document.terakhir_autosave,
-        "created_at": document.created_at,
-        "updated_at": document.updated_at,
-        "fields": field_items,
-        "budgets": budgets,
-        "schedules": schedules,
-        "outputs": outputs,
-        "researchers": researchers,
-        "partners": partners,
-    }
+        content_map = {content.template_field_id: content.isi for content in contents}
 
-def get_content_by_key(db: Session, document: Document):
-    fields = (
-        db.query(TemplateField)
-        .filter(TemplateField.template_id == document.template_id)
-        .all()
-    )
+        field_items = []
+        for field in fields:
+            field_items.append(
+                {
+                    "template_field_id": field.id,
+                    "nama_field": field.nama_field,
+                    "label_field": field.label_field,
+                    "tipe_field": field.tipe_field,
+                    "wajib": field.wajib,
+                    "isi": content_map.get(field.id) or "",
+                }
+            )
+
+        budgets = db.query(Budget).filter(Budget.dokumen_id == document_id).all()
+        schedules = db.query(Schedule).filter(Schedule.dokumen_id == document_id).all()
+        outputs = db.query(Output).filter(Output.dokumen_id == document_id).all()
+        researchers = db.query(Researcher).filter(Researcher.dokumen_id == document_id).all()
+        partners = db.query(Partner).filter(Partner.dokumen_id == document_id).all()
+
+        return {
+            "id": document.id,
+            "user_id": document.user_id,
+            "jenis_dokumen_id": document.jenis_dokumen_id,
+            "template_id": resolved_template_id or 0,
+            "judul": document.judul or "Tanpa Judul",
+            "status_dokumen": document.status_dokumen or "draft",
+            "terakhir_autosave": document.terakhir_autosave,
+            "created_at": document.created_at,
+            "updated_at": document.updated_at,
+            "parent_dokumen_id": document.parent_dokumen_id,
+            "penelitian_id": document.penelitian_id,
+            "fields": field_items,
+            "budgets": budgets or [],
+            "schedules": schedules or [],
+            "outputs": outputs or [],
+            "researchers": researchers or [],
+            "partners": partners or [],
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        import traceback
+        print("ERROR IN GET DOCUMENT FULL DETAIL:")
+        traceback.print_exc() # Point 10
+        raise HTTPException(status_code=500, detail=f"Gagal mengambil detail dokumen: {str(e)}") # Point 9
+
+def get_content_by_key(db: Session, document: Document, template_id: int):
+    # Query TemplateField strictly using the resolved template_id (Point 5)
+    fields = []
+    if template_id:
+        fields = (
+            db.query(TemplateField)
+            .filter(TemplateField.template_id == template_id)
+            .all()
+        )
 
     contents = (
         db.query(DocumentContent)
@@ -117,7 +157,7 @@ def get_content_by_key(db: Session, document: Document):
                 except json.JSONDecodeError:
                     content_by_key[key] = []
             else:
-                content_by_key[key] = content.isi
+                content_by_key[key] = content.isi or ""
 
     return content_by_key
 
@@ -127,115 +167,182 @@ def get_document_preview(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
-    document = (
-        db.query(Document)
-        .filter(Document.id == document_id, Document.user_id == int(current_user["id"]))
-        .first()
-    )
+    try:
+        from sqlalchemy.orm import aliased
+        from app.models.research import Research
+        from app.models.template import Template
 
-    if not document:
-        raise HTTPException(status_code=404, detail="Dokumen tidak ditemukan")
+        # Explicit aliases to prevent ID conflicts (Point 6)
+        dokumen = aliased(Document, name="dokumen")
+        penelitian = aliased(Research, name="penelitian")
+        templates = aliased(Template, name="templates")
 
-    current_contents = get_content_by_key(db, document)
-
-    parent_document = None
-    parent_contents = {}
-
-    progress_document = None
-    progress_contents = {}
-
-    if document.jenis_dokumen_id == 3 and document.parent_dokumen_id:
-        progress_document = (
-            db.query(Document)
+        result = (
+            db.query(dokumen, penelitian, templates)
+            .outerjoin(penelitian, dokumen.penelitian_id == penelitian.id)
+            .outerjoin(templates, dokumen.template_id == templates.id)
             .filter(
-                Document.parent_dokumen_id == document.parent_dokumen_id,
-                Document.jenis_dokumen_id == 2,
-                Document.user_id == int(current_user["id"]),
-            )
-            .order_by(Document.created_at.desc())
-            .first()
-        )
-
-        if progress_document:
-            progress_contents = get_content_by_key(db, progress_document)
-
-    if document.parent_dokumen_id:
-        parent_document = (
-            db.query(Document)
-            .filter(
-                Document.id == document.parent_dokumen_id,
-                Document.user_id == int(current_user["id"]),
+                dokumen.id == document_id,
+                dokumen.user_id == int(current_user["id"])
             )
             .first()
         )
 
-        if parent_document:
-            parent_contents = get_content_by_key(db, parent_document)
+        if not result:
+            raise HTTPException(status_code=404, detail="Dokumen tidak ditemukan")
 
-    source_document = parent_document if parent_document else document
-    source_contents = parent_contents if parent_document else current_contents
+        document, penelitian_obj, template_obj = result
 
-    researchers = (
-        db.query(Researcher)
-        .filter(Researcher.dokumen_id == source_document.id)
-        .all()
-    )
+        # Fallback to active template if template_id is null/None/0 (Point 4)
+        resolved_template_id = document.template_id
+        if not resolved_template_id:
+            active_template = (
+                db.query(Template)
+                .filter(
+                    Template.jenis_dokumen_id == document.jenis_dokumen_id,
+                    Template.status_aktif == 1
+                )
+                .order_by(Template.id.desc())
+                .first()
+            )
+            if active_template:
+                resolved_template_id = active_template.id
 
-    partners = (
-        db.query(Partner)
-        .filter(Partner.dokumen_id == source_document.id)
-        .all()
-    )
+        current_contents = get_content_by_key(db, document, resolved_template_id)
 
-    outputs = (
-        db.query(Output)
-        .filter(Output.dokumen_id == source_document.id)
-        .all()
-    )
+        parent_document = None
+        parent_contents = {}
 
-    budgets = (
-        db.query(Budget)
-        .filter(Budget.dokumen_id == source_document.id)
-        .all()
-    )
+        progress_document = None
+        progress_contents = {}
 
-    schedules = (
-        db.query(Schedule)
-        .filter(Schedule.dokumen_id == source_document.id)
-        .all()
-    )
+        if document.jenis_dokumen_id == 3 and document.parent_dokumen_id:
+            progress_document = (
+                db.query(Document)
+                .filter(
+                    Document.parent_dokumen_id == document.parent_dokumen_id,
+                    Document.jenis_dokumen_id == 2,
+                    Document.user_id == int(current_user["id"]),
+                )
+                .order_by(Document.created_at.desc())
+                .first()
+            )
 
-    return {
-        "judul": document.judul,
-        "status_dokumen": document.status_dokumen,
-        "jenis_dokumen_id": document.jenis_dokumen_id,
-        "template_id": document.template_id,
-        "parent_dokumen_id": document.parent_dokumen_id,
+            if progress_document:
+                prog_template_id = progress_document.template_id
+                if not prog_template_id:
+                    active_template = (
+                        db.query(Template)
+                        .filter(
+                            Template.jenis_dokumen_id == progress_document.jenis_dokumen_id,
+                            Template.status_aktif == 1
+                        )
+                        .order_by(Template.id.desc())
+                        .first()
+                    )
+                    if active_template:
+                        prog_template_id = active_template.id
+                progress_contents = get_content_by_key(db, progress_document, prog_template_id)
 
-        "contents": current_contents,
-        "parent_contents": parent_contents,
+        if document.parent_dokumen_id:
+            parent_document = (
+                db.query(Document)
+                .filter(
+                    Document.id == document.parent_dokumen_id,
+                    Document.user_id == int(current_user["id"]),
+                )
+                .first()
+            )
 
-        "judul_penelitian": source_contents.get("judul_penelitian") or source_document.judul,
-        "bidang_fokus_rirn": source_contents.get("bidang_fokus_rirn"),
-        "tema_penelitian": source_contents.get("tema_penelitian"),
-        "topik_penelitian": source_contents.get("topik_penelitian"),
-        "rumpun_bidang_ilmu": source_contents.get("rumpun_bidang_ilmu"),
-        "target_akhir_tkt": source_contents.get("target_akhir_tkt"),
-        "lama_penelitian": source_contents.get("lama_penelitian"),
-        "dana_penelitian": source_contents.get("dana_penelitian"),
-        "ringkasan": source_contents.get("ringkasan"),
-        "kata_kunci": source_contents.get("kata_kunci"),
-        "latar_belakang": source_contents.get("latar_belakang"),
-        "tinjauan_pustaka": source_contents.get("tinjauan_pustaka"),
-        "metode_penelitian": source_contents.get("metode_penelitian"),
-        "daftar_pustaka": source_contents.get("daftar_pustaka"),
+            if parent_document:
+                parent_template_id = parent_document.template_id
+                if not parent_template_id:
+                    active_template = (
+                        db.query(Template)
+                        .filter(
+                            Template.jenis_dokumen_id == parent_document.jenis_dokumen_id,
+                            Template.status_aktif == 1
+                        )
+                        .order_by(Template.id.desc())
+                        .first()
+                    )
+                    if active_template:
+                        parent_template_id = active_template.id
+                parent_contents = get_content_by_key(db, parent_document, parent_template_id)
 
-        "pengusul": researchers,
-        "mitra": partners,
-        "luaran": outputs,
-        "anggaran": budgets,
-        "jadwal": schedules,
+        source_document = parent_document if parent_document else document
+        source_contents = parent_contents if parent_document else current_contents
 
-        "progress_dokumen_id": progress_document.id if progress_document else None,
-        "progress_contents": progress_contents,
-    }
+        researchers = (
+            db.query(Researcher)
+            .filter(Researcher.dokumen_id == source_document.id)
+            .all()
+        )
+
+        partners = (
+            db.query(Partner)
+            .filter(Partner.dokumen_id == source_document.id)
+            .all()
+        )
+
+        outputs = (
+            db.query(Output)
+            .filter(Output.dokumen_id == source_document.id)
+            .all()
+        )
+
+        budgets = (
+            db.query(Budget)
+            .filter(Budget.dokumen_id == source_document.id)
+            .all()
+        )
+
+        schedules = (
+            db.query(Schedule)
+            .filter(Schedule.dokumen_id == source_document.id)
+            .all()
+        )
+
+        # Robust mapping of optional fields to prevent 500 render errors (Points 7 & 8)
+        preview_data = {
+            "judul": document.judul or "Tanpa Judul",
+            "status_dokumen": document.status_dokumen or "draft",
+            "jenis_dokumen_id": document.jenis_dokumen_id,
+            "template_id": resolved_template_id or 0,
+            "parent_dokumen_id": document.parent_dokumen_id,
+
+            "contents": current_contents or {},
+            "parent_contents": parent_contents or {},
+
+            "judul_penelitian": source_contents.get("judul_penelitian") or source_document.judul or "Tanpa Judul",
+            "bidang_fokus_rirn": source_contents.get("bidang_fokus_rirn") or "",
+            "tema_penelitian": source_contents.get("tema_penelitian") or "",
+            "topik_penelitian": source_contents.get("topik_penelitian") or "",
+            "rumpun_bidang_ilmu": source_contents.get("rumpun_bidang_ilmu") or "",
+            "target_akhir_tkt": source_contents.get("target_akhir_tkt") or "",
+            "lama_penelitian": source_contents.get("lama_penelitian") or "",
+            "dana_penelitian": source_contents.get("dana_penelitian") or (str(int(sum([b.total for b in budgets]))) if budgets else ""),
+            "ringkasan": source_contents.get("ringkasan") or "",
+            "kata_kunci": source_contents.get("kata_kunci") or "",
+            "latar_belakang": source_contents.get("latar_belakang") or "",
+            "tinjauan_pustaka": source_contents.get("tinjauan_pustaka") or "",
+            "metode_penelitian": source_contents.get("metode_penelitian") or "",
+            "daftar_pustaka": source_contents.get("daftar_pustaka") or "",
+
+            "pengusul": researchers if researchers is not None else [],
+            "mitra": partners if partners is not None else [],
+            "luaran": outputs if outputs is not None else [],
+            "anggaran": budgets if budgets is not None else [],
+            "jadwal": schedules if schedules is not None else [],
+
+            "progress_dokumen_id": progress_document.id if progress_document else None,
+            "progress_contents": progress_contents or {},
+        }
+        return preview_data
+    except HTTPException:
+        raise
+    except Exception as e:
+        import traceback
+        print("ERROR IN GET DOCUMENT PREVIEW:")
+        traceback.print_exc() # Point 10
+        raise HTTPException(status_code=500, detail=f"Gagal mengambil preview dokumen: {str(e)}") # Point 9

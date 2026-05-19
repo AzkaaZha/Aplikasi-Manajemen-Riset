@@ -11,6 +11,7 @@ class PackageDocumentItem(BaseModel):
     parent_dokumen_id: Optional[int] = None
     judul: str
     status_dokumen: Optional[str] = None
+    penelitian_id: Optional[int] = None
     terakhir_autosave: Optional[datetime] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
@@ -23,3 +24,5 @@ class ResearchPackageResponse(BaseModel):
     proposal: PackageDocumentItem
     laporan_kemajuan: Optional[PackageDocumentItem] = None
     laporan_akhir: Optional[PackageDocumentItem] = None
+    status_penelitian: Optional[str] = "draft"
+    research_id: Optional[int] = None

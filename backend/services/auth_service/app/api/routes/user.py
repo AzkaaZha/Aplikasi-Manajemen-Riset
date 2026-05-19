@@ -77,17 +77,23 @@ def update_user(
     return user
 
 @router.delete("/{user_id}")
-def deactivate_user(
+def delete_user(
     user_id: int,
     db: session = Depends(get_db),
     current_user: User = Depends(require_admin)
 ):
+    from sqlalchemy.exc import IntegrityError
     user = db.query(User).filter(User.id == user_id).first()
 
     if not user:
         raise HTTPException(status_code=404, detail="User tidak ditemukan")
 
-    user.status_aktif = 0
-    db.commit()
-
-    return {"message": "User berhasil dinonaktifkan"}
+    try:
+        db.delete(user)
+        db.commit()
+        return {"message": "User berhasil dihapus permanen"}
+    except IntegrityError:
+        db.rollback()
+        user.status_aktif = 0
+        db.commit()
+        return {"message": "User dinonaktifkan karena memiliki data terkait"}

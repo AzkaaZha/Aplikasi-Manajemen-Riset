@@ -1,0 +1,182 @@
+.editor-container {
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+  position: relative;
+}
+
+.editor-content-wrapper {
+  flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  padding-top: 12px;
+}
+
+.editor-content-wrapper.has-back {
+  padding-top: 0px;
+}
+
+/* New Stable Floating Back Button */
+.back-button-bar {
+  position: fixed;
+  top: 72px; /* Navbar height */
+  left: 0;
+  right: 0;
+  z-index: 990; /* Below navbar (1000) to slide under it */
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  height: 50px;
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(0);
+}
+
+/* Sidebar context */
+.sidebar-open .back-button-bar {
+  left: 280px;
+}
+
+.back-button-bar.hidden {
+  transform: translateY(-100%);
+  pointer-events: none;
+}
+
+/* Adjust left position based on sidebar state if possible, 
+   but since we are inside main-content wrapper, we can use a simpler approach 
+   if we change it to sticky but absolute positioned child. 
+   Actually, let's keep it simple for now and align it with the wrapper. */
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--dark-blue);
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.back-button:hover {
+  background-color: rgba(0,0,0,0.03);
+}
+
+.editor-form-area {
+  background-color: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 25px rgba(0,0,0,0.04);
+  margin-bottom: 24px;
+  border: 1px solid #f0f2f5;
+  margin-top: 0px;
+}
+
+@media (max-width: 768px) {
+  .back-button-bar {
+    left: 0;
+    padding: 0 20px;
+  }
+}
+
+.step-content {
+  margin-top: 10px;
+}
+
+.step-container {
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Push effect when AI is open */
+.editor-container.ai-open {
+  margin-right: 380px;
+}
+
+@media (max-width: 1200px) {
+  .editor-container.ai-open {
+    margin-right: 0;
+  }
+}
+
+.document-review-wrapper {
+  padding: 20px;
+}
+
+.review-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.review-meta-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.review-meta-field.full-width {
+  grid-column: 1 / -1;
+}
+
+.review-meta-label {
+  font-size: 0.95rem;
+  color: var(--dark-blue);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.review-meta-value-box {
+  background: #f8fafc;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  padding: 14px 16px;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+}
+
+.review-meta-value {
+  color: #2e3440;
+  font-weight: 400;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+@media (max-width: 767px) {
+  .review-meta-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Ensure action buttons and AI assistant do not overlap */
+.editor-action-buttons {
+  position: sticky;
+  bottom: 0;
+  z-index: 1000;
+  background: var(--secondary-bg);
+  padding: 12px;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ai-assistant {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 1001;
+}
+
+.sticky-back-header.hidden {
+  display: none;
+}

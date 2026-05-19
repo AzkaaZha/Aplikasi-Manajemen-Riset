@@ -1,0 +1,28 @@
+.final-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+.final-table th,
+.final-table td {
+  padding: 12px 14px;
+  border: 1px solid #dee2e6;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.final-table th {
+  background-color: var(--dark-blue);
+  font-weight: 700;
+  color: #ffffff;
+  border-bottom: none;
+}
+
+.empty-cell {
+  color: #adb5bd;
+}
+
+.final-table tbody tr:hover {
+  background-color: rgba(11, 49, 65, 0.04);
+}

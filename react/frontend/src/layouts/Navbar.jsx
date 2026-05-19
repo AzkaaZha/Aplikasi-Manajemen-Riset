@@ -1,36 +1,38 @@
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 function Navbar({ setIsOpen }) {
-  const navigate = useNavigate();
+  const { user } = useAuth();
 
   return (
-    <div className="navbar-container px-4 border-bottom">
+    <nav className="navbar-container">
 
-      {/* LEFT */}
+      {/* LEFT - Menu Toggle */}
       <div className="nav-left">
         <button
-          type="button"
-          className="btn btn-outline-dark"
+          className="btn-menu"
           onClick={() => setIsOpen(true)}
+          title="Buka Menu"
         >
           <i className="bi bi-list"></i>
         </button>
       </div>
 
-      {/* CENTER */}
+      {/* CENTER - Branding */}
       <div className="nav-center">
-        <h5 className="m-0 fw-bold">SIMR STT NF</h5>
+        <h5>SIMR STT NF</h5>
       </div>
 
-      {/* RIGHT */}
-      <div
-        className="nav-right"
-        onClick={() => navigate("/")}
-      >
-        <i className="bi bi-person-circle fs-4"></i>
+      {/* RIGHT - User Profile */}
+<div className="nav-right">
+        <span className="nav-user-name">
+          {user?.name || user?.email || "User"}
+        </span>
+        <div className="nav-user-icon">
+          <i className="bi bi-person-circle"></i>
+        </div>
       </div>
 
-    </div>
+    </nav>
   );
 }
 

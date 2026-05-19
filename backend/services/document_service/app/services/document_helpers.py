@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.models.document import Document
 from app.models.template import Template
+from app.models.research import Research
 
 
 def get_owned_document_or_404(
@@ -67,3 +68,30 @@ def get_active_template_or_404(
         )
 
     return template
+
+
+def recalculate_research_status(db: Session, research_id: int):
+    """
+    Menghitung ulang status penelitian berdasarkan kelengkapan dokumen:
+    - Lengkap (selesai): Jika Proposal, Lap. Kemajuan, dan Lap. Akhir semuanya ada.
+    - Draft (draft): Jika ada salah satu dokumen yang belum dibuat.
+    """
+    research = db.query(Research).filter(Research.id == research_id).first()
+    if not research:
+        return
+
+    # Hitung jumlah jenis dokumen unik yang sudah dibuat
+    # 1: Proposal, 2: Laporan Kemajuan, 3: Laporan Akhir
+    doc_types = db.query(Document.jenis_dokumen_id).filter(
+        Document.penelitian_id == research_id
+    ).distinct().all()
+    
+    unique_types = [t[0] for t in doc_types]
+    
+    # Syarat Lengkap: Harus punya jenis 1, 2, dan 3
+    if 1 in unique_types and 2 in unique_types and 3 in unique_types:
+        research.status_penelitian = "selesai"
+    else:
+        research.status_penelitian = "draft"
+    
+    db.commit()

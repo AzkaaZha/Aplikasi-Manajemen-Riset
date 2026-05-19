@@ -1,0 +1,31 @@
+/* ---- SECTION HEADING ---- */
+.detail-section-heading {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--dark-blue);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--dark-blue);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ---- DOCUMENT CARDS GRID ---- */
+.doc-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 991px) {
+  .doc-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .doc-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -23,103 +23,179 @@ def export_pdf(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
-    preview = get_document_preview(document_id, db, current_user)
+    import traceback
+    import shutil
+    temp_pdf_paths = []
+    try:
+        from sqlalchemy.orm import aliased
+        from app.models.document import Document
+        from app.models.research import Research
+        from app.models.template import Template
 
-    template_dir = Path(__file__).resolve().parents[2] / "templates"
-    static_dir = Path(__file__).resolve().parents[2] / "static"
+        # Explicit aliases to prevent ID conflicts (Point 6)
+        dokumen = aliased(Document, name="dokumen")
+        penelitian = aliased(Research, name="penelitian")
+        templates = aliased(Template, name="templates")
 
-    env = Environment(loader=FileSystemLoader(str(template_dir)))
-
-    jenis_dokumen_id = preview.get("jenis_dokumen_id")
-
-    cover_template = None
-    content_template = None
-    cover_bg_url = None
-    file_prefix = "dokumen"
-    use_cover = False
-
-    if jenis_dokumen_id == 1:
-        cover_template = env.get_template("proposal_cover.html")
-        content_template = env.get_template("proposal_content.html")
-        cover_bg_url = (static_dir / "cover_proposal.jpg").resolve().as_uri()
-        file_prefix = "proposal"
-        use_cover = True
-
-    elif jenis_dokumen_id == 2:
-        cover_template = env.get_template("laporan_kemajuan_cover.html")
-        content_template = env.get_template("laporan_kemajuan_content.html")
-        cover_bg_url = (static_dir / "cover_laporan_kemajuan.jpg").resolve().as_uri()
-        file_prefix = "laporan_kemajuan"
-        use_cover = True
-
-    elif jenis_dokumen_id == 3:
-        cover_template = env.get_template("laporan_akhir_cover.html")
-        content_template = env.get_template("laporan_akhir_content.html")
-        cover_bg_url = (static_dir / "cover_laporan_akhir.jpg").resolve().as_uri()
-        file_prefix = "laporan_akhir"
-        use_cover = True
-
-    else:
-        raise HTTPException(
-            status_code=400,
-            detail="Template export PDF untuk jenis dokumen ini belum tersedia",
+        result = (
+            db.query(dokumen, penelitian, templates)
+            .outerjoin(penelitian, dokumen.penelitian_id == penelitian.id)
+            .outerjoin(templates, dokumen.template_id == templates.id)
+            .filter(
+                dokumen.id == document_id,
+                dokumen.user_id == int(current_user["id"])
+            )
+            .first()
         )
 
-    logo_sttnf_url = (static_dir / "logo_sttnf.png").resolve().as_uri()
+        if not result:
+            raise HTTPException(status_code=404, detail="Dokumen tidak ditemukan")
 
-    render_data = {
-        **preview,
-        "cover_bg_url": cover_bg_url,
-        "logo_sttnf_url": logo_sttnf_url,
-        "tahun": "2026",
-    }
+        document, penelitian_obj, template_obj = result
 
-    wkhtmltopdf_path = r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe"
-    config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
+        # Fallback to active template if template_id is null/None/0 (Point 4)
+        resolved_template_id = document.template_id
+        if not resolved_template_id:
+            active_template = (
+                db.query(Template)
+                .filter(
+                    Template.jenis_dokumen_id == document.jenis_dokumen_id,
+                    Template.status_aktif == 1
+                )
+                .order_by(Template.id.desc())
+                .first()
+            )
+            if active_template:
+                resolved_template_id = active_template.id
 
-    cover_options = {
-        "page-size": "A4",
-        "encoding": "UTF-8",
-        "margin-top": "0mm",
-        "margin-right": "0mm",
-        "margin-bottom": "0mm",
-        "margin-left": "0mm",
-        "enable-local-file-access": None,
-        "disable-smart-shrinking": None,
-        "zoom": "1",
-        "dpi": "96",
-        "print-media-type": None,
-    }
+        # Get preview data (robust mapping done internally in get_document_preview)
+        preview = get_document_preview(document_id, db, current_user)
 
-    content_options = {
-        "page-size": "A4",
-        "encoding": "UTF-8",
-        "margin-top": "25.4mm",
-        "margin-right": "25.4mm",
-        "margin-bottom": "25.4mm",
-        "margin-left": "25.4mm",
-        "enable-local-file-access": None,
-        "disable-smart-shrinking": None,
-        "zoom": "1",
-        "dpi": "96",
-        "print-media-type": None,
-    }
+        template_dir = Path(__file__).resolve().parents[2] / "templates"
+        static_dir = Path(__file__).resolve().parents[2] / "static"
 
-    temp_pdf_paths = []
+        env = Environment(loader=FileSystemLoader(str(template_dir)))
 
-    try:
+        jenis_dokumen_id = preview.get("jenis_dokumen_id")
+
+        cover_template = None
+        content_template = None
+        cover_bg_url = None
+        file_prefix = "dokumen"
+        use_cover = False
+
+        if jenis_dokumen_id == 1:
+            cover_template = env.get_template("proposal_cover.html")
+            content_template = env.get_template("proposal_content.html")
+            cover_bg_url = (static_dir / "cover_proposal.jpg").resolve().as_uri()
+            file_prefix = "proposal"
+            use_cover = True
+
+        elif jenis_dokumen_id == 2:
+            cover_template = env.get_template("laporan_kemajuan_cover.html")
+            content_template = env.get_template("laporan_kemajuan_content.html")
+            cover_bg_url = (static_dir / "cover_laporan_kemajuan.jpg").resolve().as_uri()
+            file_prefix = "laporan_kemajuan"
+            use_cover = True
+
+        elif jenis_dokumen_id == 3:
+            cover_template = env.get_template("laporan_akhir_cover.html")
+            content_template = env.get_template("laporan_akhir_content.html")
+            cover_bg_url = (static_dir / "cover_laporan_akhir.jpg").resolve().as_uri()
+            file_prefix = "laporan_akhir"
+            use_cover = True
+
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail="Template export PDF untuk jenis dokumen ini belum tersedia",
+            )
+
+        logo_sttnf_url = (static_dir / "logo_sttnf.png").resolve().as_uri()
+
+        render_data = {
+            **preview,
+            "cover_bg_url": cover_bg_url,
+            "logo_sttnf_url": logo_sttnf_url,
+            "tahun": "2026",
+        }
+
+        # Dynamic search for wkhtmltopdf in PATH and common installation directories
+        wkhtmltopdf_path = shutil.which("wkhtmltopdf")
+        if not wkhtmltopdf_path:
+            common_paths = [
+                r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe",
+                r"C:\Program Files (x86)\wkhtmltopdf\bin\wkhtmltopdf.exe",
+                r"C:\wkhtmltopdf\bin\wkhtmltopdf.exe",
+            ]
+            for p in common_paths:
+                if Path(p).exists():
+                    wkhtmltopdf_path = p
+                    break
+
+        if not wkhtmltopdf_path:
+            raise HTTPException(
+                status_code=500,
+                detail=(
+                    "wkhtmltopdf tidak ditemukan di sistem. Silakan install wkhtmltopdf di Windows "
+                    "menggunakan installer resmi, atau jalankan command 'choco install wkhtmltopdf' di PowerShell administrator."
+                ),
+            )
+
+        try:
+            config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
+        except Exception as ex:
+            raise HTTPException(
+                status_code=500,
+                detail=f"Konfigurasi wkhtmltopdf gagal: {ex}",
+            )
+
+        cover_options = {
+            "page-size": "A4",
+            "encoding": "UTF-8",
+            "margin-top": "0mm",
+            "margin-right": "0mm",
+            "margin-bottom": "0mm",
+            "margin-left": "0mm",
+            "enable-local-file-access": None,
+            "disable-smart-shrinking": None,
+            "zoom": "1",
+            "dpi": "96",
+            "print-media-type": None,
+        }
+
+        content_options = {
+            "page-size": "A4",
+            "encoding": "UTF-8",
+            "margin-top": "25.4mm",
+            "margin-right": "25.4mm",
+            "margin-bottom": "25.4mm",
+            "margin-left": "25.4mm",
+            "enable-local-file-access": None,
+            "disable-smart-shrinking": None,
+            "zoom": "1",
+            "dpi": "96",
+            "print-media-type": None,
+        }
+
         if use_cover and cover_template is not None:
             cover_html = cover_template.render(**render_data)
 
             with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as cover_file:
                 cover_pdf_path = cover_file.name
 
-            pdfkit.from_string(
-                cover_html,
-                cover_pdf_path,
-                configuration=config,
-                options=cover_options,
-            )
+            try:
+                pdfkit.from_string(
+                    cover_html,
+                    cover_pdf_path,
+                    configuration=config,
+                    options=cover_options,
+                )
+            except Exception as ex:
+                raise HTTPException(
+                    status_code=500,
+                    detail=f"Gagal membuat PDF cover: {ex}",
+                )
 
             temp_pdf_paths.append(cover_pdf_path)
 
@@ -128,12 +204,18 @@ def export_pdf(
         with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as content_file:
             content_pdf_path = content_file.name
 
-        pdfkit.from_string(
-            content_html,
-            content_pdf_path,
-            configuration=config,
-            options=content_options,
-        )
+        try:
+            pdfkit.from_string(
+                content_html,
+                content_pdf_path,
+                configuration=config,
+                options=content_options,
+            )
+        except Exception as ex:
+            raise HTTPException(
+                status_code=500,
+                detail=f"Gagal membuat PDF konten: {ex}",
+            )
 
         temp_pdf_paths.append(content_pdf_path)
 
@@ -178,7 +260,15 @@ def export_pdf(
                 "Content-Disposition": f"attachment; filename={pdf_filename}"
             },
         )
-
+    except HTTPException:
+        raise
+    except Exception as e:
+        print("ERROR IN EXPORT PDF:")
+        traceback.print_exc() # Point 10
+        raise HTTPException(
+            status_code=500,
+            detail=f"Gagal mengekspor PDF: {str(e)}", # Point 9
+        )
     finally:
         for temp_path in temp_pdf_paths:
             if temp_path and os.path.exists(temp_path):

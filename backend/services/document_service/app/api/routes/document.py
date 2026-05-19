@@ -12,6 +12,13 @@ from app.schemas.document import (
 )
 from app.schemas.document_related import RelatedDocumentsResponse
 from app.schemas.document_package import ResearchPackageResponse
+from app.models.researcher import Researcher
+from app.models.partner import Partner
+from app.models.output import Output
+from app.models.schedule import Schedule
+from app.models.budget import Budget
+from app.models.document_content import DocumentContent
+from app.models.template_field import TemplateField
 from datetime import datetime
 import os
 
@@ -177,6 +184,7 @@ def create_progress_report_from_proposal(
 
     new_report = Document(
         user_id=int(current_user["id"]),
+        penelitian_id=proposal.penelitian_id,
         jenis_dokumen_id=2,
         template_id=template.id,
         parent_dokumen_id=proposal.id,
@@ -187,6 +195,8 @@ def create_progress_report_from_proposal(
     db.add(new_report)
     db.commit()
     db.refresh(new_report)
+
+    copy_proposal_data_to_report(db, proposal.id, new_report.id, template.id)
 
     return new_report
 
@@ -235,6 +245,7 @@ def create_final_report_from_proposal(
 
     new_report = Document(
         user_id=int(current_user["id"]),
+        penelitian_id=proposal.penelitian_id,
         jenis_dokumen_id=3,
         template_id=template.id,
         parent_dokumen_id=proposal.id,
@@ -245,6 +256,8 @@ def create_final_report_from_proposal(
     db.add(new_report)
     db.commit()
     db.refresh(new_report)
+
+    copy_proposal_data_to_report(db, proposal.id, new_report.id, template.id)
 
     return new_report
 
@@ -288,11 +301,17 @@ def get_my_research_packages(
             .first()
         )
 
+        from app.models.research import Research
+        research = db.query(Research).filter(Research.id == proposal.penelitian_id).first()
+        status_penelitian = research.status_penelitian if research else "draft"
+
         result.append(
             {
                 "proposal": proposal,
                 "laporan_kemajuan": laporan_kemajuan,
                 "laporan_akhir": laporan_akhir,
+                "status_penelitian": status_penelitian,
+                "research_id": research.id if research else proposal.penelitian_id
             }
         )
 
@@ -412,8 +431,15 @@ def delete_document(
 
         db.delete(file_record)
 
+    research_id = document.penelitian_id
+
     db.delete(document)
     db.commit()
+
+    # Recalculate research status after deletion
+    if research_id:
+        from app.services.document_helpers import recalculate_research_status
+        recalculate_research_status(db, research_id)
 
     return {
         "message": "Dokumen berhasil dihapus",
@@ -441,6 +467,90 @@ def get_active_template_or_404(
         )
 
     return template
+
+def copy_proposal_data_to_report(
+    db: Session,
+    proposal_id: int,
+    report_id: int,
+    template_id: int
+):
+    # Copy IsiDokumen (mapping by nama_field)
+    proposal_contents = (
+        db.query(DocumentContent, TemplateField.nama_field)
+        .join(TemplateField, DocumentContent.template_field_id == TemplateField.id)
+        .filter(DocumentContent.dokumen_id == proposal_id)
+        .all()
+    )
+    
+    proposal_data_map = {nama_field: content.isi for content, nama_field in proposal_contents if content.isi}
+    
+    target_template_fields = db.query(TemplateField).filter(TemplateField.template_id == template_id).all()
+    
+    for field in target_template_fields:
+        if field.nama_field in proposal_data_map:
+            new_content = DocumentContent(
+                dokumen_id=report_id,
+                template_field_id=field.id,
+                isi=proposal_data_map[field.nama_field]
+            )
+            db.add(new_content)
+
+    # Copy Researchers
+    researchers = db.query(Researcher).filter(Researcher.dokumen_id == proposal_id).all()
+    for r in researchers:
+        new_r = Researcher(
+            dokumen_id=report_id,
+            nama=r.nama, peran=r.peran, institusi=r.institusi,
+            program_studi=r.program_studi, bidang_tugas=r.bidang_tugas,
+            id_sinta=r.id_sinta, h_index=r.h_index, nidn_nip_nim=r.nidn_nip_nim
+        )
+        db.add(new_r)
+
+    # Copy Partners
+    partners = db.query(Partner).filter(Partner.dokumen_id == proposal_id).all()
+    for p in partners:
+        new_p = Partner(
+            dokumen_id=report_id,
+            nama_mitra=p.nama_mitra, jenis_mitra=p.jenis_mitra,
+            alamat=p.alamat, keterangan=p.keterangan
+        )
+        db.add(new_p)
+
+    # Copy Outputs
+    outputs = db.query(Output).filter(Output.dokumen_id == proposal_id).all()
+    for o in outputs:
+        new_o = Output(
+            dokumen_id=report_id,
+            kategori_luaran=o.kategori_luaran, tahun_luaran=o.tahun_luaran,
+            jenis_luaran=o.jenis_luaran, status_target=o.status_target,
+            keterangan=o.keterangan
+        )
+        db.add(new_o)
+
+    # Copy Schedules
+    schedules = db.query(Schedule).filter(Schedule.dokumen_id == proposal_id).all()
+    for s in schedules:
+        new_s = Schedule(
+            dokumen_id=report_id,
+            nama_kegiatan=s.nama_kegiatan,
+            bulan_1=s.bulan_1, bulan_2=s.bulan_2, bulan_3=s.bulan_3, bulan_4=s.bulan_4,
+            bulan_5=s.bulan_5, bulan_6=s.bulan_6, bulan_7=s.bulan_7, bulan_8=s.bulan_8,
+            bulan_9=s.bulan_9, bulan_10=s.bulan_10, bulan_11=s.bulan_11, bulan_12=s.bulan_12
+        )
+        db.add(new_s)
+
+    # Copy Budgets
+    budgets = db.query(Budget).filter(Budget.dokumen_id == proposal_id).all()
+    for b in budgets:
+        new_b = Budget(
+            dokumen_id=report_id,
+            jenis_pembelanjaan=b.jenis_pembelanjaan, item=b.item,
+            satuan=b.satuan, volume=b.volume, biaya_satuan=b.biaya_satuan,
+            total=b.total
+        )
+        db.add(new_b)
+
+    db.commit()
 
 
 

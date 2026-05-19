@@ -1,0 +1,20 @@
+.editor-page-heading {
+  margin-bottom: 24px;
+}
+
+.editor-page-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--dark-blue);
+  margin-bottom: 8px;
+}
+
+.editor-page-subtitle {
+  font-size: 14px;
+  color: #495057;
+}
+
+.ai-floating-btn {
+  right: 32px;
+  bottom: 32px;
+}

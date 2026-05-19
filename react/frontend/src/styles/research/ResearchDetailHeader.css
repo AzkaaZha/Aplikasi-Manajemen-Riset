@@ -1,0 +1,30 @@
+/* ---- BACK BUTTON ---- */
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid var(--dark-blue);
+  color: var(--dark-blue);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 7px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  margin-bottom: 24px;
+}
+
+.btn-back:hover {
+  background-color: var(--dark-blue);
+  color: #fff;
+}
+
+@media (max-width: 576px) {
+  .btn-back {
+    font-size: 13px;
+    padding: 6px 14px;
+    margin-bottom: 18px;
+  }
+}

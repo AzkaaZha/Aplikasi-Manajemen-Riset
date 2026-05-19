@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.dependencies.auth import get_current_user
@@ -7,8 +7,67 @@ from app.schemas.file_document import FileDocumentResponse
 from app.models.document import Document
 from app.models.file_document import FileDocument
 import os
+import shutil
+from pathlib import Path
+from datetime import datetime
 
 router = APIRouter(prefix="/documents", tags=["Documents"])
+
+@router.post("/{document_id}/files", response_model=FileDocumentResponse)
+def upload_document_file(
+    document_id: int,
+    file: UploadFile = File(...),
+    nama_lampiran: str = Form(...),
+    tipe_lampiran: str = Form(...),
+    keterangan: str = Form(None),
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user),
+):
+    document = (
+        db.query(Document)
+        .filter(
+            Document.id == document_id,
+            Document.user_id == int(current_user["id"]),
+        )
+        .first()
+    )
+
+    if not document:
+        raise HTTPException(status_code=404, detail="Dokumen tidak ditemukan")
+
+    # Setup storage directory
+    storage_dir = Path(__file__).resolve().parents[3] / "storage" / "uploads"
+    storage_dir.mkdir(parents=True, exist_ok=True)
+
+    # Generate unique filename
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    file_ext = Path(file.filename).suffix
+    # Use nama_lampiran for the filename but keep it safe
+    safe_name = "".join(c for c in nama_lampiran if c.isalnum() or c in (' ', '.', '_')).rstrip()
+    safe_name = safe_name.replace(' ', '_')
+    unique_filename = f"{safe_name}_{timestamp}{file_ext}"
+    file_path = storage_dir / unique_filename
+
+    # Save physical file
+    try:
+        with file_path.open("wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Gagal menyimpan file: {str(e)}")
+
+    # Create database record
+    new_file = FileDocument(
+        dokumen_id=document_id,
+        nama_file=nama_lampiran, # Simpan nama asli lampiran dari user
+        file_path=str(file_path),
+        tipe_file=tipe_lampiran.lower(),
+    )
+
+    db.add(new_file)
+    db.commit()
+    db.refresh(new_file)
+
+    return new_file
 
 @router.get("/{document_id}/files", response_model=list[FileDocumentResponse])
 def get_document_files(

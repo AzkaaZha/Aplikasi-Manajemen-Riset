@@ -1,0 +1,116 @@
+/* Quill Editor Wrapper - Ensure dropdown visibility */
+.quill-editor-wrapper {
+  position: relative;
+  overflow: visible;
+  margin-bottom: 1rem;
+}
+
+/* Toolbar Styling */
+.quill-editor-wrapper .ql-toolbar.ql-snow {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  background-color: #f8f9fa;
+  border-color: #e9ecef;
+  padding: 8px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.ql-container.ql-snow {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  border-color: #e9ecef;
+  min-height: 150px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+}
+
+/* Picker Labels & Items */
+.quill-editor-wrapper .ql-snow .ql-picker.ql-font { width: 150px; }
+.quill-editor-wrapper .ql-snow .ql-picker.ql-size { width: 90px; }
+.quill-editor-wrapper .ql-snow .ql-picker.ql-header { width: 110px; }
+
+/* Font styles */
+.ql-font-poppins { font-family: 'Poppins', sans-serif; }
+.ql-font-times-new-roman { font-family: 'Times New Roman', serif; }
+.ql-font-arial { font-family: Arial, sans-serif; }
+.ql-font-calibri { font-family: 'Calibri', 'Candara', 'Segoe UI', sans-serif; }
+
+/* Font Labels */
+.ql-snow .ql-picker.ql-font .ql-picker-label:not([data-value])::before { content: "Poppins"; }
+.ql-picker-item[data-value="poppins"]::before, .ql-picker-label[data-value="poppins"]::before { content: "Poppins"; }
+.ql-picker-item[data-value="times-new-roman"]::before, .ql-picker-label[data-value="times-new-roman"]::before { content: "Times New Roman"; }
+.ql-picker-item[data-value="arial"]::before, .ql-picker-label[data-value="arial"]::before { content: "Arial"; }
+.ql-picker-item[data-value="calibri"]::before, .ql-picker-label[data-value="calibri"]::before { content: "Calibri"; }
+
+/* Size Labels & Styles */
+.ql-snow .ql-picker.ql-size .ql-picker-label::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item::before { content: "Size"; }
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="12px"]::before, .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="12px"]::before { content: "12px"; }
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="14px"]::before, .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="14px"]::before { content: "14px"; }
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="16px"]::before, .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="16px"]::before { content: "16px"; }
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="18px"]::before, .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="18px"]::before { content: "18px"; }
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="24px"]::before, .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="24px"]::before { content: "24px"; }
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="32px"]::before, .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="32px"]::before { content: "32px"; }
+
+.ql-size-12px { font-size: 12px; }
+.ql-size-14px { font-size: 14px; }
+.ql-size-16px { font-size: 16px; }
+.ql-size-18px { font-size: 18px; }
+.ql-size-24px { font-size: 24px; }
+.ql-size-32px { font-size: 32px; }
+
+/* Alignment Dropdown Fix */
+.quill-editor-wrapper .ql-snow .ql-picker.ql-align {
+  width: 34px;
+}
+
+.quill-editor-wrapper .ql-snow .ql-picker.ql-align .ql-picker-label svg {
+  right: 0;
+  left: auto;
+}
+
+/* Ensure alignment icons are visible in dropdown */
+.quill-editor-wrapper .ql-snow .ql-picker.ql-align .ql-picker-options .ql-picker-item {
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quill-editor-wrapper .ql-snow .ql-picker.ql-align .ql-picker-options {
+  width: 40px;
+  min-width: 40px;
+}
+
+/* Picker styles */
+.quill-editor-wrapper .ql-snow .ql-picker-options {
+  z-index: 9999;
+  background: #fff;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.quill-editor-wrapper .ql-snow .ql-picker-item {
+  border-radius: 4px;
+  padding: 5px 10px;
+}
+
+.quill-editor-wrapper .ql-snow .ql-picker-item:hover {
+  background-color: #f1f3f5;
+  color: var(--dark-blue);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ql-toolbar.ql-snow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+  .quill-editor-wrapper .ql-snow .ql-picker.ql-font { width: 110px; }
+}

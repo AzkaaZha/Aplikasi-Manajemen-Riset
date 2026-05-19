@@ -1,0 +1,149 @@
+.login-page {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-card {
+  width: 380px;
+  max-width: 90%;
+  border-radius: 20px;
+  border: none;
+  background: #ffffff;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.login-header {
+  text-align: center;
+  padding: 25px 40px 5px 40px;
+}
+
+.login-body {
+  padding: 0 40px 20px 40px;
+}
+
+.logo-circle {
+  width: 42px;
+  height: 42px;
+  background: var(--green);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  box-shadow: 0 4px 10px rgba(var(--green-rgb, 40, 167, 69), 0.1);
+}
+
+.form-control {
+  border-radius: 10px;
+  padding: 9px 14px;
+  border: 1.5px solid #eee;
+  background-color: #fcfcfc;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.form-control:focus {
+  background-color: #fff;
+  border-color: var(--green);
+  box-shadow: 0 0 0 4px rgba(var(--green-rgb, 40, 167, 69), 0.1);
+}
+
+.btn-success {
+  background-color: var(--green);
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.btn-success:hover:not(:disabled) {
+  background-color: #1e7e34;
+}
+
+.login-footer {
+  text-align: center;
+  padding: 12px;
+  background-color: #fafafa;
+  border-top: 1px solid #f0f0f0;
+}
+
+/* ERROR & STATE STYLES */
+.error-state-container {
+  min-height: 25px;
+  margin-bottom: 5px;
+}
+
+.error-alert {
+  font-size: 0.75rem;
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* INPUT COMPONENT STYLES */
+.input-group-custom {
+  margin-bottom: 0.4rem;
+}
+
+.input-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 3px;
+}
+
+.input-error-wrapper {
+  min-height: 12px;
+  margin-top: 1px;
+}
+
+.input-error-text {
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: #dc3545;
+}
+
+@media (max-width: 576px) {
+  .login-card {
+    width: 92%;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  }
+  
+  .login-header {
+    padding: 25px 20px 5px 20px;
+  }
+  
+  .login-body {
+    padding: 0 20px 20px 20px;
+  }
+
+  /* SweetAlert2 Mobile Adjustments */
+  body .swal2-container .swal2-popup {
+    width: 85%;
+    padding: 1.5rem 1rem;
+    border-radius: 20px;
+  }
+
+  body .swal2-container .swal2-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+
+  body .swal2-container .swal2-icon {
+    transform: scale(0.85);
+    margin: 10px auto 5px auto;
+  }
+}

@@ -8,3 +8,4 @@ from app.models.researcher import Researcher
 from app.models.partner import Partner
 from app.models.file_document import FileDocument
 from app.models.template import Template
+from app.models.research import Research

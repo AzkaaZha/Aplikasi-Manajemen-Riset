@@ -1,9 +1,0 @@
-.login-card {
-  width: 340px;
-  border-radius: 12px;
-  border: 1px solid #ddd;
-  background: #fff;
-
-  /* efek timbul tetap */
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-}

@@ -1,0 +1,77 @@
+/* Research Page Layout Styles */
+.research-container {
+  padding: 0 10px;
+}
+
+.research-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.research-title-group h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--dark-blue);
+}
+
+.research-subtitle {
+  color: #6c757d;
+  margin: 5px 0 0 0;
+  font-size: 0.95rem;
+}
+
+.btn-add-research {
+  background-color: var(--green);
+  color: #ffffff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-add-research:hover {
+  background-color: #028a3e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(2, 171, 77, 0.2);
+}
+
+.research-card-wrapper {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  border: 1px solid #edf2f7;
+  /* Removed overflow: hidden to allow dropdowns to pop out */
+  position: relative;
+  margin-bottom: 40px;
+}
+
+@media (max-width: 991px) {
+  .research-title-group h1 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .research-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .btn-add-research {
+    width: 100%;
+    justify-content: center;
+  }
+}

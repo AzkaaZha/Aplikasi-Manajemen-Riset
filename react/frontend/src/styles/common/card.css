@@ -1,0 +1,142 @@
+.document-card {
+  border: 1px solid #dfe5e7;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  margin-bottom: 16px;
+}
+
+.table-container {
+  border: none;
+  box-shadow: none;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.table .table-header-custom th {
+  background-color: var(--dark-blue);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+}
+
+.table-header-custom th:first-child {
+  border-top-left-radius: 12px;
+}
+
+.table-header-custom th:last-child {
+  border-top-right-radius: 12px;
+}
+
+.table td {
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.table tbody tr:hover {
+  background-color: #f8f9fa;
+  transition: 0.2s;
+}
+
+table .btn-outline-custom {
+  border: 1px solid var(--dark-blue);
+  color: var(--dark-blue);
+  background-color: #fff;
+  transition: all 0.2s ease-in-out;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+table .btn-outline-custom i {
+  color: currentColor;
+}
+
+table .btn-outline-custom:hover {
+  background-color: var(--dark-blue);
+  border-color: var(--dark-blue);
+  color: #fff;
+}
+
+.status-box {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-block;
+  min-width: 80px;
+  text-align: center;
+}
+
+.status-selesai {
+  background-color: var(--green);
+  color: #fff;
+}
+
+.status-proses {
+  background-color: var(--yellow);
+  color: #000;
+}
+
+.status-belum {
+  background-color: var(--maroon);
+  color: #fff;
+}
+
+.document-card-header {
+  background-color: var(--dark-blue);
+  color: white;
+  padding: 12px 18px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  min-height: 60px;
+}
+
+.document-card-header i {
+  font-size: 15px;
+}
+
+.document-card-body {
+  padding: 10px;
+  background: #fff;
+}
+
+.document-item {
+  background: #fff;
+  border: 1px solid #e5ecec;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  min-height: 55px;
+  transition: 0.2s ease;
+}
+
+.document-item:last-child {
+  margin-bottom: 0;
+}
+
+.document-item span {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.document-item:hover {
+  background: #f8fafa;
+}
+
+.document-btn {
+  border: none;
+  background: transparent;
+  color: #6c757d;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.document-btn:hover {
+  color: var(--dark-blue);
+}

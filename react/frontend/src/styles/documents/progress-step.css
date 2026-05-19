@@ -1,0 +1,116 @@
+.progress-readonly-card {
+  background: #f8fbff;
+  border-color: #dde9f2;
+}
+
+.progress-readonly-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.progress-readonly-item {
+  background: #ffffff;
+  border: 1px solid #dde6ec;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.progress-readonly-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6c757d;
+  margin-bottom: 6px;
+}
+
+.progress-readonly-value {
+  color: #1f2937;
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 24px;
+}
+
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  background-color: #e8f2ff;
+  color: #1565c0;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.progress-helper-text {
+  color: #6c757d;
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+.progress-file-list {
+  margin-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.progress-file-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid #dee2e6;
+  background: #fff;
+  font-size: 14px;
+}
+
+.progress-file-item span {
+  color: #475569;
+}
+
+.progress-file-item i {
+  color: #6c757d;
+}
+
+.finish-icon {
+  width: 88px;
+  height: 88px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: rgba(2, 171, 77, 0.12);
+  color: var(--green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.4rem;
+}
+
+.finish-text {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.finish-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+}
+
+.btn-save-draft,
+.btn-export-pdf {
+  min-width: 220px;
+}
+
+.finish-info-card {
+  max-width: 600px;
+}
+
+.finish-info-title {
+  color: var(--dark-blue);
+}
+
+.finish-info-list {
+  font-size: 14px;
+}

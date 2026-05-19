@@ -1,0 +1,221 @@
+.form-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #eef2f3;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.form-card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--dark-blue);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-label {
+  color: #444;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.form-control, .form-select {
+  border-radius: 10px;
+  padding: 12px 16px;
+  border: 1.5px solid #dee2e6;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--dark-blue);
+  box-shadow: 0 0 0 3px rgba(11, 49, 65, 0.1);
+}
+
+.input-group-text {
+  border-radius: 10px 0 0 10px;
+  background-color: #f8f9fa;
+  border: 1.5px solid #dee2e6;
+  border-right: none;
+}
+
+.input-group .form-control {
+  border-radius: 0 10px 10px 0;
+}
+
+.step-header {
+  margin-bottom: 24px;
+}
+
+.step-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--dark-blue);
+}
+
+.step-subtitle {
+  font-size: 14px;
+  color: #6c757d;
+}
+
+/* React Quill Custom Styling */
+.quill {
+  border-radius: 12px;
+  overflow: visible;
+  border: 1.5px solid #dee2e6;
+  position: relative;
+}
+
+.quill .ql-toolbar {
+  border: none;
+  border-bottom: 1px solid #eee;
+  background: #fcfdfe;
+  position: relative;
+  z-index: 20;
+}
+
+.quill .ql-container {
+  border: none;
+  min-height: 200px;
+  font-family: 'Poppins', sans-serif;
+  position: relative;
+  overflow: visible;
+}
+
+.ql-editor {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Ensure containers don't clip the Quill dropdown */
+.form-card {
+  overflow: visible;
+}
+
+/* Additional support for parent containers */
+.quill-editor-wrapper,
+.quill-wrapper,
+.document-editor-card,
+.document-form-card {
+  overflow: visible;
+}
+
+/* Readonly field styling — replaces inline styles */
+input.form-control.form-control-readonly, 
+textarea.form-control.form-control-readonly, 
+select.form-select.form-control-readonly,
+.form-control.form-control-readonly {
+  background-color: #f8f9fa;
+  cursor: default;
+  color: #495057;
+  border: 1.5px solid #dee2e6;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 14px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.form-control-readonly:focus {
+  outline: none;
+  border-color: #dee2e6;
+  box-shadow: none;
+}
+
+/* Tambah button — replaces inline styles */
+.btn-add {
+  background-color: var(--dark-blue);
+  border-color: var(--dark-blue);
+  color: #fff;
+  padding: 8px 24px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 14px;
+  border: 1.5px solid var(--dark-blue);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-add:hover {
+  background-color: var(--darker-blue, #072430);
+  border-color: var(--darker-blue, #072430);
+  box-shadow: 0 4px 12px rgba(11, 49, 65, 0.2);
+  color: #fff;
+}
+
+/* Schedule indicator — replaces inline style in jadwal table */
+.schedule-indicator {
+  width: 16px;
+  height: 16px;
+  background-color: var(--dark-blue);
+  border-radius: 4px;
+  margin: 0 auto;
+}
+
+/* Error text shared */
+.form-error-text {
+  color: #d63384;
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+/* Helper text shared */
+.form-helper-text {
+  color: #6c757d;
+  font-size: 13px;
+  margin-top: 8px;
+}
+/* Utilities */
+.form-card .max-w-600 { max-width: 600px; }
+.form-card .text-dark-blue { color: var(--dark-blue); }
+.form-card .fs-14 { font-size: 14px; }
+
+.form-control.form-control-readonly.compact {
+  min-height: auto;
+}
+
+/* Selesai Step Styles */
+.success-icon-wrapper {
+  width: 80px;
+  height: 80px;
+  background-color: rgba(2, 171, 77, 0.1);
+  border-radius: 50%;
+  color: #02ab4d;
+  font-size: 40px;
+  box-shadow: 0 4px 15px rgba(2, 171, 77, 0.1);
+}
+
+.btn-export-pdf {
+  background: linear-gradient(135deg, #02ab4d 0%, #018a3e 100%);
+  border: none;
+  color: #fff;
+  padding: 12px 32px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 16px;
+  box-shadow: 0 4px 15px rgba(2, 171, 77, 0.2);
+  transition: all 0.3s ease;
+  min-width: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-export-pdf:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* PDF Export Styling */
+.pdf-content,
+.pdf-content * {
+  font-family: "Times New Roman", Times, serif !important;
+}

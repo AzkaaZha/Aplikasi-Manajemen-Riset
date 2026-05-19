@@ -1,0 +1,96 @@
+/* ---- INFO CARD ---- */
+.detail-info-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #edf2f7;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  padding: 28px 32px;
+  margin-bottom: 28px;
+}
+
+.detail-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.detail-meta-item {
+  display: flex;
+  align-items: center;
+}
+
+.detail-meta-divider {
+  width: 1px;
+  height: 20px;
+  background-color: #e2e8f0;
+}
+
+@media (max-width: 576px) {
+  .detail-meta-divider {
+    display: none;
+  }
+  .detail-meta {
+    gap: 12px;
+  }
+}
+
+.detail-year-badge {
+  background-color: var(--dark-blue);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 14px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+
+.detail-status-badge {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 14px;
+  border-radius: 20px;
+}
+
+.detail-status-badge.selesai {
+  background-color: rgba(2, 171, 77, 0.12);
+  color: var(--green);
+}
+
+.detail-status-badge.draft {
+  background-color: rgba(255, 193, 7, 0.15);
+  color: #b8860b;
+}
+
+.detail-status-badge.aktif {
+  background-color: rgba(11, 49, 65, 0.1);
+  color: var(--dark-blue);
+}
+
+.detail-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--dark-blue);
+  margin: 0;
+  line-height: 1.4;
+}
+
+@media (max-width: 991px) {
+  .detail-title {
+    font-size: 1.25rem;
+  }
+  .detail-info-card {
+    padding: 22px 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .detail-title {
+    font-size: 1.1rem;
+  }
+  .detail-info-card {
+    padding: 18px 16px;
+    margin-bottom: 20px;
+  }
+}

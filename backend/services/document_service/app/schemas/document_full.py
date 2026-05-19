@@ -72,6 +72,8 @@ class DocumentFullDetailResponse(BaseModel):
     terakhir_autosave: Optional[datetime] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
+    parent_dokumen_id: Optional[int] = None
+    penelitian_id: Optional[int] = None
 
     fields: List[FieldContentItem]
     budgets: List[BudgetItem]

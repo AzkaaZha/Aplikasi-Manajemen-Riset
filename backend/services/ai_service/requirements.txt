@@ -1,6 +1,10 @@
 fastapi
 uvicorn
+<<<<<<< HEAD
 google-genai
+=======
+google-generativeai
+>>>>>>> 49aba3087b3f855aa889c564c1139967a45e6cc4
 python-dotenv
 pydantic
 pydantic-settings

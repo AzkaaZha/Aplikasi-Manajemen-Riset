@@ -3,6 +3,7 @@ from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.dependencies.auth import get_current_user
+from app.api.routes.document_helper import get_owned_document_or_404
 from app.models.file_document import FileDocument
 from pathlib import Path
 from datetime import datetime
@@ -23,6 +24,7 @@ def export_pdf(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
+<<<<<<< HEAD
     import traceback
     import shutil
     temp_pdf_paths = []
@@ -31,6 +33,10 @@ def export_pdf(
         from app.models.document import Document
         from app.models.research import Research
         from app.models.template import Template
+=======
+    document = get_owned_document_or_404(db, document_id, current_user)
+    preview = get_document_preview(document_id, db, current_user)
+>>>>>>> 49aba3087b3f855aa889c564c1139967a45e6cc4
 
         # Explicit aliases to prevent ID conflicts (Point 6)
         dokumen = aliased(Document, name="dokumen")
@@ -51,7 +57,21 @@ def export_pdf(
         if not result:
             raise HTTPException(status_code=404, detail="Dokumen tidak ditemukan")
 
+<<<<<<< HEAD
         document, penelitian_obj, template_obj = result
+=======
+    months = ["", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"]
+    now = datetime.now()
+    tanggal_cetak_depok = f"Depok, {now.day} {months[now.month]} {now.year}"
+
+    render_data = {
+        **preview,
+        "cover_bg_url": cover_bg_url,
+        "logo_sttnf_url": logo_sttnf_url,
+        "tahun": str(now.year),
+        "tanggal_cetak": tanggal_cetak_depok,
+    }
+>>>>>>> 49aba3087b3f855aa889c564c1139967a45e6cc4
 
         # Fallback to active template if template_id is null/None/0 (Point 4)
         resolved_template_id = document.template_id
@@ -178,8 +198,15 @@ def export_pdf(
             "print-media-type": None,
         }
 
+<<<<<<< HEAD
+=======
+    local_static_uri = static_dir.resolve().as_uri() + "/"
+
+    try:
+>>>>>>> 49aba3087b3f855aa889c564c1139967a45e6cc4
         if use_cover and cover_template is not None:
             cover_html = cover_template.render(**render_data)
+            cover_html = cover_html.replace("http://localhost:8002/static/", local_static_uri)
 
             with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as cover_file:
                 cover_pdf_path = cover_file.name
@@ -200,6 +227,7 @@ def export_pdf(
             temp_pdf_paths.append(cover_pdf_path)
 
         content_html = content_template.render(**render_data)
+        content_html = content_html.replace("http://localhost:8002/static/", local_static_uri)
 
         with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as content_file:
             content_pdf_path = content_file.name

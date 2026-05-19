@@ -13,6 +13,7 @@ from app.models.template_field import TemplateField
 from app.models.document import Document
 from app.models.template import Template
 from app.schemas.research import ResearchCreate, ResearchUpdate, ResearchResponse
+<<<<<<< HEAD
 from app.schemas.document import CreateDocumentRequest, DocumentResponse
 from app.schemas.document_full import DocumentFullDetailResponse
 from app.services.document_helpers import recalculate_research_status
@@ -28,6 +29,9 @@ class NestedDocumentUpdateRequest(BaseModel):
     judul: Optional[str] = None
     status_dokumen: Optional[str] = None
     items: Optional[List[DocumentContentItem]] = None
+=======
+
+>>>>>>> 49aba3087b3f855aa889c564c1139967a45e6cc4
 router = APIRouter(prefix="/researches", tags=["Researches"])
 
 def get_owned_research_or_404(
@@ -92,11 +96,16 @@ def create_research(
 
     return research
 
+<<<<<<< HEAD
 @router.get("/")
+=======
+@router.get("/", response_model=list[ResearchResponse])
+>>>>>>> 49aba3087b3f855aa889c564c1139967a45e6cc4
 def list_researches(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
+<<<<<<< HEAD
     """
     GET /researches/
     Mengembalikan daftar penelitian milik user dengan alias penelitian_id yang eksplisit.
@@ -105,12 +114,16 @@ def list_researches(
     print(f"[GET /researches/] Dipanggil oleh user_id={current_user['id']}")
 
     researches = (
+=======
+    return (
+>>>>>>> 49aba3087b3f855aa889c564c1139967a45e6cc4
         db.query(Research)
         .filter(Research.user_id == current_user["id"])
         .order_by(Research.created_at.desc())
         .all()
     )
 
+<<<<<<< HEAD
     result = []
     for r in researches:
         # Hitung jumlah dokumen milik penelitian ini
@@ -130,6 +143,8 @@ def list_researches(
     print(f"[GET /researches/] Mengembalikan {len(result)} penelitian")
     return result
 
+=======
+>>>>>>> 49aba3087b3f855aa889c564c1139967a45e6cc4
 @router.get("/{research_id}", response_model=ResearchResponse)
 def get_research(
     research_id: int,
@@ -175,9 +190,14 @@ def update_research(
     if payload.tahun is not None:
         research.tahun = payload.tahun
 
+<<<<<<< HEAD
     # Manual status update removed as per requirements
     # if payload.status_penelitian is not None:
     #     research.status_penelitian = payload.status_penelitian
+=======
+    if payload.status_penelitian is not None:
+        research.status_penelitian = payload.status_penelitian
+>>>>>>> 49aba3087b3f855aa889c564c1139967a45e6cc4
 
     db.commit()
     db.refresh(research)
@@ -190,6 +210,7 @@ def delete_research(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
+<<<<<<< HEAD
     """
     DELETE /researches/{research_id}
     Menghapus penelitian beserta SEMUA dokumen terkait berdasarkan penelitian.id.
@@ -198,6 +219,8 @@ def delete_research(
     print(f"[DELETE /researches/{research_id}] Dipanggil oleh user_id={current_user['id']}")
     print(f"[DELETE /researches/{research_id}] Mencari penelitian dengan id={research_id}")
 
+=======
+>>>>>>> 49aba3087b3f855aa889c564c1139967a45e6cc4
     research = (
         db.query(Research)
         .filter(
@@ -208,6 +231,7 @@ def delete_research(
     )
 
     if not research:
+<<<<<<< HEAD
         print(f"[DELETE /researches/{research_id}] ERROR: Penelitian tidak ditemukan")
         raise HTTPException(status_code=404, detail="Penelitian tidak ditemukan")
 
@@ -237,6 +261,14 @@ def delete_research(
         "penelitian_id": research_id,
         "jumlah_dokumen_dihapus": len(related_documents)
     }
+=======
+        raise HTTPException(status_code=404, detail="Penelitian tidak ditemukan")
+
+    db.delete(research)
+    db.commit()
+
+    return {"message": "Penelitian berhasil dihapus"}
+>>>>>>> 49aba3087b3f855aa889c564c1139967a45e6cc4
 
 @router.get("/{research_id}/documents")
 def get_research_documents(
@@ -244,11 +276,14 @@ def get_research_documents(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
+<<<<<<< HEAD
     """
     GET /researches/{research_id}/documents
     Mengembalikan detail penelitian beserta semua dokumen miliknya.
     Menggunakan alias dokumen_id dan penelitian_id yang eksplisit.
     """
+=======
+>>>>>>> 49aba3087b3f855aa889c564c1139967a45e6cc4
     research = get_owned_research_or_404(db, research_id, current_user)
 
     documents = (
@@ -257,6 +292,7 @@ def get_research_documents(
         .all()
     )
 
+<<<<<<< HEAD
     def doc_to_dict(doc):
         """Konversi dokumen ke dict dengan alias yang jelas."""
         return {
@@ -276,10 +312,29 @@ def get_research_documents(
         "proposal": None,
         "laporan_kemajuan": None,
         "laporan_akhir": None,
+=======
+    result = {
+        "proposal": {
+            "id": None,
+            "status": "belum_dibuat",
+            "is_created": False
+        },
+        "laporan_kemajuan": {
+            "id": None,
+            "status": "belum_dibuat",
+            "is_created": False
+        },
+        "laporan_akhir": {
+            "id": None,
+            "status": "belum_dibuat",
+            "is_created": False
+        }
+>>>>>>> 49aba3087b3f855aa889c564c1139967a45e6cc4
     }
 
     for document in documents:
         if document.jenis_dokumen_id == 1:
+<<<<<<< HEAD
             result["proposal"] = doc_to_dict(document)
         elif document.jenis_dokumen_id == 2:
             result["laporan_kemajuan"] = doc_to_dict(document)
@@ -290,6 +345,24 @@ def get_research_documents(
         "research": {
             "id": research.id,               # backward-compat
             "penelitian_id": research.id,     # alias eksplisit
+=======
+            key = "proposal"
+        elif document.jenis_dokumen_id == 2:
+            key = "laporan_kemajuan"
+        elif document.jenis_dokumen_id == 3:
+            key = "laporan_akhir"
+        else:
+            continue
+
+        result[key] = {
+            "id": document.id,
+            "is_created": True
+        }
+
+    return {
+        "research": {
+            "id": research.id,
+>>>>>>> 49aba3087b3f855aa889c564c1139967a45e6cc4
             "judul_penelitian": research.judul_penelitian,
             "tahun": research.tahun,
             "status_penelitian": research.status_penelitian
@@ -297,6 +370,7 @@ def get_research_documents(
         "documents": result
     }
 
+<<<<<<< HEAD
 # -------------------------------------------------------------------------
 # NEW NESTED DOCUMENT ENDPOINTS
 # -------------------------------------------------------------------------
@@ -578,6 +652,8 @@ def delete_nested_document(
 
 
 
+=======
+>>>>>>> 49aba3087b3f855aa889c564c1139967a45e6cc4
 @router.post("/{research_id}/documents/proposal")
 def create_proposal_document(
     research_id: int,
@@ -617,9 +693,12 @@ def create_proposal_document(
     db.commit()
     db.refresh(document)
 
+<<<<<<< HEAD
     # Recalculate research status after document creation
     recalculate_research_status(db, research.id)
 
+=======
+>>>>>>> 49aba3087b3f855aa889c564c1139967a45e6cc4
     return {
         "message": "Proposal berhasil dibuat",
         "document": {
@@ -686,8 +765,14 @@ def create_progress_report_document(
     db.commit()
     db.refresh(document)
 
+<<<<<<< HEAD
     # Recalculate research status automatically
     recalculate_research_status(db, research.id)
+=======
+    # Update status penelitian menjadi berjalan
+    research.status_penelitian = "berjalan"
+    db.commit()
+>>>>>>> 49aba3087b3f855aa889c564c1139967a45e6cc4
 
     # Salin data dari proposal
     copy_document_data(db, proposal.id, document.id, template.id)
@@ -758,8 +843,14 @@ def create_final_report_document(
     db.commit()
     db.refresh(document)
 
+<<<<<<< HEAD
     # Recalculate research status automatically
     recalculate_research_status(db, research.id)
+=======
+    # Update status penelitian menjadi selesai
+    research.status_penelitian = "selesai"
+    db.commit()
+>>>>>>> 49aba3087b3f855aa889c564c1139967a45e6cc4
 
     # Salin data dari proposal
     copy_document_data(db, proposal.id, document.id, template.id)
@@ -784,7 +875,11 @@ def copy_document_data(db: Session, source_dokumen_id: int, target_dokumen_id: i
 
     # Copy Partners
     for p in db.query(Partner).filter(Partner.dokumen_id == source_dokumen_id).all():
+<<<<<<< HEAD
         db.add(Partner(dokumen_id=target_dokumen_id, nama_mitra=p.nama_mitra, jenis_mitra=p.jenis_mitra, alamat=p.alamat, keterangan=p.keterangan))
+=======
+        db.add(Partner(dokumen_id=target_dokumen_id, nama_mitra=p.nama_mitra, jenis_mitra=p.jenis_mitra))
+>>>>>>> 49aba3087b3f855aa889c564c1139967a45e6cc4
 
     # Copy Schedules
     for s in db.query(Schedule).filter(Schedule.dokumen_id == source_dokumen_id).all():

@@ -3,268 +3,152 @@
 <head>
   <meta charset="UTF-8" />
   <style>
+  @page {
+    margin: 2.5cm 2.5cm 2.5cm 3cm; /* Standard academic margins */
+  }
+
   html, body {
     margin: 0;
     padding: 0;
     color: #000;
     font-family: "Times New Roman", Times, serif;
-    font-size: 14pt;
+    font-size: 12pt;
     line-height: 1.5;
-    font-stretch: normal;
-    letter-spacing: 0.25px;
-    word-spacing: 1.2px;
     text-rendering: optimizeLegibility;
   }
 
-  * {
-    box-sizing: border-box;
-  }
+  * { box-sizing: border-box; }
+  .page-break { page-break-before: always; }
+  .avoid-break { page-break-inside: avoid; }
+  .center { text-align: center !important; }
+  .bold { font-weight: bold; }
 
-  .page-break {
-    page-break-before: always;
-  }
-
-  .avoid-break {
-    page-break-inside: avoid;
-  }
-
-  .center {
-    text-align: center;
-  }
-
-  .bold {
-    font-weight: bold;
-  }
-
-  h1, h2 {
-    margin: 0 0 11mm 0;
+  h1, h2, .main-title {
+    margin: 0 0 10mm 0;
     padding: 0;
     text-align: center;
-    font-size: 16pt;
+    font-size: 14pt;
     font-weight: bold;
-    line-height: 1.25;
-    letter-spacing: 0.2px;
-    word-spacing: 1.2px;
+    line-height: 1.3;
+    text-transform: uppercase;
+    clear: both;
   }
 
   h3 {
-    margin: 7mm 0 3.5mm 0;
+    margin: 8mm 0 4mm 0;
     padding: 0;
-    font-size: 16pt;
+    font-size: 12pt;
     font-weight: bold;
-    line-height: 1.25;
-    letter-spacing: 0.2px;
-    word-spacing: 1.2px;
-  }
-
-  h4 {
-    margin: 5.5mm 0 3mm 0;
-    padding: 0;
-    font-size: 14pt;
-    font-weight: bold;
-    line-height: 1.25;
-    letter-spacing: 0.2px;
-    word-spacing: 1.2px;
+    line-height: 1.3;
+    text-align: left;
   }
 
   p {
     margin: 0 0 4mm 0;
     padding: 0;
-    font-size: 14pt;
-    line-height: 1.55;
-    letter-spacing: 0.25px;
-    word-spacing: 1.2px;
+    font-size: 12pt;
+    line-height: 1.5;
     text-align: justify;
+    /* To prevent huge gaps, we rely on wkhtmltopdf's default behavior 
+       but if it's too bad, we switch to left. 
+       Let's try left-align to be safe for now since user complained. */
+    text-align: left; 
+    word-wrap: break-word;
+    letter-spacing: 0.01em;
   }
 
   table {
     width: 100%;
     border-collapse: collapse;
-    margin: 3.5mm 0 6.5mm 0;
-    font-size: 14pt;
-    line-height: 1.4;
-    letter-spacing: 0.2px;
-    word-spacing: 0.8px;
-  }
-
-  tr {
-    page-break-inside: avoid;
-    page-break-after: auto;
+    margin: 5mm 0 8mm 0;
+    font-size: 11pt;
   }
 
   th, td {
     border: 1px solid #000;
-    padding: 2.6mm 2.2mm;
+    padding: 3mm 2.5mm;
     vertical-align: top;
-    line-height: 1.35;
-    letter-spacing: 0.2px;
-    word-spacing: 0.8px;
+    line-height: 1.4;
   }
 
   th {
+    background-color: #f8f8f8;
     text-align: center;
     font-weight: bold;
   }
 
-  .approval-title {
-    margin: 0 0 7mm 0;
+  /* Cover Styles */
+  .formal-cover {
     text-align: center;
+    height: 900px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .formal-logo {
+    width: 50mm;
+    margin: 20mm auto 20mm auto;
+  }
+
+  .formal-title {
+    font-size: 16pt;
+    font-weight: bold;
+    margin-bottom: 30mm;
+  }
+
+  .formal-subtitle {
     font-size: 14pt;
     font-weight: bold;
-    line-height: 1.25;
-    letter-spacing: 0.2px;
-    word-spacing: 1.2px;
+    margin: 20mm auto;
+    width: 80%;
   }
 
-  .approval-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 0;
+  .formal-footer {
+    margin-top: 50mm;
     font-size: 14pt;
-    line-height: 1.25;
+    font-weight: bold;
+    text-transform: uppercase;
   }
 
-  .approval-table td {
-    border: none;
-    padding: 0.75mm 0.6mm;
-    line-height: 1.25;
-    vertical-align: top;
+  .school-name {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 2mm;
   }
 
-  .approval-no {
-    width: 7mm;
-  }
-
-  .approval-label {
-    width: 54mm;
-  }
-
-  .approval-colon {
-    width: 4mm;
-    text-align: center;
-  }
-
-  .approval-list {
-    margin: 0;
-    padding-left: 6mm;
-  }
-
-  .approval-list div {
-    margin: 0 0 0.4mm 0;
-    line-height: 1.2;
-  }
-
+  /* Signature Styles */
   .signature-table {
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 8mm;
-    font-size: 12pt;
-    line-height: 1.2;
+    margin-top: 15mm;
+    border: none;
   }
 
   .signature-table td {
-    width: 50%;
     border: none;
-    padding: 0;
+    width: 50%;
     text-align: center;
-    vertical-align: top;
-    line-height: 1.2;
+    padding: 5mm;
   }
 
-  .signature-space {
-    height: 24mm;
-  }
+  .signature-space { height: 30mm; }
 
   .known-block {
-    margin-top: 6mm;
+    margin: 20mm auto 0 auto;
     text-align: center;
-    font-size: 12pt;
-    line-height: 1.2;
-  }
-
-  .known-space {
-    height: 18mm;
-  }
-
-  .toc-title {
-    text-align: center;
-    font-size: 14pt;
-    font-weight: bold;
-    margin-bottom: 9mm;
-  }
-
-  .toc-row {
-    margin-bottom: 2.2mm;
-    font-size: 12pt;
-    line-height: 1.4;
-    letter-spacing: 0.2px;
-    word-spacing: 1.2px;
-  }
-
-  .toc-sub {
-    padding-left: 8mm;
-  }
-
-  .identity-table th,
-  .identity-table td {
-    padding: 2.6mm 2.2mm;
-    font-size: 12pt;
-    line-height: 1.35;
-  }
-
-  .output-table th,
-  .output-table td,
-  .budget-table th,
-  .budget-table td {
-    padding: 2.4mm 2mm;
-    font-size: 11pt;
-    line-height: 1.3;
-  }
-
-  .schedule-block {
-    page-break-inside: avoid;
-    break-inside: avoid;
-    margin-top: 7mm;
-  }
-
-  .schedule-table {
     width: 100%;
-    table-layout: fixed;
-    page-break-inside: avoid;
-    break-inside: avoid;
-    font-size: 10.5pt;
-    line-height: 1.2;
+    clear: both;
   }
 
-  .schedule-table th,
-  .schedule-table td {
-    padding: 2mm 1mm;
-    text-align: center;
-    font-size: 10.5pt;
-    line-height: 1.2;
-    word-break: normal;
-    overflow-wrap: normal;
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 5mm auto;
   }
 
-  .schedule-table .activity {
-    text-align: left;
-    word-break: normal;
-    overflow-wrap: break-word;
-  }
-
-  .section-note {
-    margin: 0 0 4mm 0;
-    font-size: 12pt;
-    line-height: 1.45;
-    text-align: justify;
-    letter-spacing: 0.25px;
-    word-spacing: 1.2px;
-  }
-
-  .currency {
-    white-space: nowrap;
-    letter-spacing: 0;
-    word-spacing: 0;
+  .ql-editor p {
+    text-align: left !important;
   }
 </style>
 </head>
@@ -292,7 +176,7 @@
   <!-- HALAMAN PENGESAHAN -->
   <div class="page-break"></div>
 
-  <div class="approval-title">
+  <div class="main-title">
     HALAMAN PENGESAHAN<br />
     LAPORAN PENELITIAN
   </div>
@@ -426,7 +310,7 @@
         NIP. 1220198101
       </td>
       <td>
-        Depok, ……………….<br />
+        Depok, {{ tanggal_cetak if tanggal_cetak else "..................." }}<br />
         Ketua Peneliti,
         <div class="signature-space"></div>
         <b>{{ ketua.nama if ketua else "(……………………………..)" }}</b>
@@ -434,7 +318,7 @@
     </tr>
   </table>
 
-  <div class="known-block">
+  <div class="known-block center">
     Mengetahui,<br />
     Ketua STT Terpadu Nurul Fikri
     <div class="signature-space"></div>
@@ -469,7 +353,7 @@
   {% endif %}
 
   <p style="text-align: left; margin-top: 8mm;">
-    Depok, ……………….<br />
+    Depok, {{ tanggal_cetak if tanggal_cetak else "..................." }}<br />
     Ketua Peneliti,
   </p>
 
@@ -481,7 +365,7 @@
   <!-- DAFTAR ISI -->
   <div class="page-break"></div>
 
-  <div class="toc-title">DAFTAR ISI</div>
+  <div class="main-title">DAFTAR ISI</div>
   <div class="toc-row">HALAMAN PENGESAHAN</div>
   <div class="toc-row">PRAKATA</div>
   <div class="toc-row">DAFTAR ISI</div>

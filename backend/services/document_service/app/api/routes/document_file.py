@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.dependencies.auth import get_current_user
 from fastapi.responses import FileResponse
+from app.api.routes.document_helper import get_owned_document_or_404
 from app.schemas.file_document import FileDocumentResponse
 from app.models.document import Document
 from app.models.file_document import FileDocument
@@ -75,6 +76,9 @@ def get_document_files(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
+
+    document = get_owned_document_or_404(db, document_id, current_user)
+
     document = (
         db.query(Document)
         .filter(
@@ -103,6 +107,9 @@ def download_document_file(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
+
+    document = get_owned_document_or_404(db, document_id, current_user)
+
     document = (
         db.query(Document)
         .filter(
@@ -143,6 +150,8 @@ def delete_document_file(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
+    document = get_owned_document_or_404(db, document_id, current_user)
+    
     document = (
         db.query(Document)
         .filter(

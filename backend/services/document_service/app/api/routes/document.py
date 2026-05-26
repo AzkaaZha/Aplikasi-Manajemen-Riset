@@ -36,10 +36,21 @@ def get_my_documents(
 
     return documents
 
-@router.get("/my-documents-placeholder")
-def placeholder():
-    # Placeholder if any other routing relies on it, otherwise deleted.
-    pass
+@router.get("/{proposal_id}/related-documents", response_model=RelatedDocumentsResponse)
+def get_related_documents(
+    proposal_id: int,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user),
+):
+    proposal = (
+        db.query(Document)
+        .filter(
+            Document.id == proposal_id,
+            Document.user_id == int(current_user["id"]),
+            Document.jenis_dokumen_id == 1,
+        )
+        .first()
+    )
 
     if not proposal:
         raise HTTPException(

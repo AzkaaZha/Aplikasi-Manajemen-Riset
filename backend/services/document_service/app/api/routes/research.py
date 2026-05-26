@@ -100,7 +100,6 @@ def list_researches(
     """
     GET /researches/
     Mengembalikan daftar penelitian milik user dengan alias penelitian_id yang eksplisit.
-    PENTING: Selalu gunakan penelitian_id, bukan id generik, agar tidak tertukar dengan dokumen.id.
     """
     print(f"[GET /researches/] Dipanggil oleh user_id={current_user['id']}")
 
@@ -290,10 +289,6 @@ def get_research_documents(
         },
         "documents": result
     }
-
-
-
-
 
 class ActiveTemplateFieldItem(BaseModel):
     template_field_id: int

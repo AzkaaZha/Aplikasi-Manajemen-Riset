@@ -6,11 +6,7 @@ class Document(Base):
     __tablename__ = "dokumen"
 
     id = Column(Integer, primary_key=True, index=True)
-<<<<<<< HEAD
     penelitian_id = Column(Integer, ForeignKey("penelitian.id", ondelete="CASCADE"), nullable=False)
-=======
-    penelitian_id = Column(Integer, ForeignKey("penelitian.id"), nullable=False)
->>>>>>> 49aba3087b3f855aa889c564c1139967a45e6cc4
     user_id = Column(Integer, nullable=False)
     jenis_dokumen_id = Column(Integer, nullable=False)
     template_id = Column(Integer, nullable=False)

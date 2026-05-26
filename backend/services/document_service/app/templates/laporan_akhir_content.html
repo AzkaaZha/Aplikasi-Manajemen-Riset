@@ -4,17 +4,19 @@
   <meta charset="UTF-8" />
   <style>
   @page {
-    margin: 2.5cm 2.5cm 2.5cm 3cm; /* Standard academic margins */
+    size: A4;
+    margin: 0;
   }
 
   html, body {
+    width: 155mm;
     margin: 0;
     padding: 0;
     color: #000;
-    font-family: "Times New Roman", Times, serif;
+    font-family: Georgia, "Times New Roman", Times, serif;
     font-size: 12pt;
-    line-height: 1.5;
-    text-rendering: optimizeLegibility;
+    line-height: 1.6;
+    letter-spacing: 0.6px;
   }
 
   * { box-sizing: border-box; }
@@ -24,6 +26,8 @@
   .bold { font-weight: bold; }
 
   h1, h2, .main-title {
+    font-family: "Times New Roman", Times, serif;
+    letter-spacing: normal;
     margin: 0 0 10mm 0;
     padding: 0;
     text-align: center;
@@ -35,7 +39,20 @@
   }
 
   h3 {
+    font-family: "Times New Roman", Times, serif;
+    letter-spacing: normal;
     margin: 8mm 0 4mm 0;
+    padding: 0;
+    font-size: 12pt;
+    font-weight: bold;
+    line-height: 1.3;
+    text-align: left;
+  }
+
+  h4 {
+    font-family: "Times New Roman", Times, serif;
+    letter-spacing: normal;
+    margin: 6mm 0 3mm 0;
     padding: 0;
     font-size: 12pt;
     font-weight: bold;
@@ -47,14 +64,9 @@
     margin: 0 0 4mm 0;
     padding: 0;
     font-size: 12pt;
-    line-height: 1.5;
+    line-height: 1.6;
     text-align: justify;
-    /* To prevent huge gaps, we rely on wkhtmltopdf's default behavior 
-       but if it's too bad, we switch to left. 
-       Let's try left-align to be safe for now since user complained. */
-    text-align: left; 
-    word-wrap: break-word;
-    letter-spacing: 0.01em;
+    text-justify: inter-word;
   }
 
   table {
@@ -62,13 +74,16 @@
     border-collapse: collapse;
     margin: 5mm 0 8mm 0;
     font-size: 11pt;
+    table-layout: fixed;
   }
 
   th, td {
-    border: 1px solid #000;
+    border: 1px solid #333;
     padding: 3mm 2.5mm;
     vertical-align: top;
     line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   th {
@@ -77,8 +92,22 @@
     font-weight: bold;
   }
 
-  /* Cover Styles */
+  .currency {
+    text-align: right !important;
+  }
+
+  .schedule-table td {
+    text-align: center;
+  }
+
+  .schedule-table td.activity {
+    text-align: left !important;
+  }
+
+
   .formal-cover {
+    font-family: "Times New Roman", Times, serif;
+    letter-spacing: normal;
     text-align: center;
     height: 900px;
     display: flex;
@@ -117,27 +146,112 @@
     margin-bottom: 2mm;
   }
 
-  /* Signature Styles */
-  .signature-table {
-    width: 100%;
-    margin-top: 15mm;
-    border: none;
-  }
 
-  .signature-table td {
-    border: none;
-    width: 50%;
+  .formal-author-block {
+    margin: 15mm auto;
+    font-size: 12pt;
     text-align: center;
-    padding: 5mm;
+    line-height: 1.6;
   }
 
-  .signature-space { height: 30mm; }
+  .formal-author-oleh {
+    font-weight: bold;
+    margin-bottom: 2mm;
+    text-transform: uppercase;
+    font-size: 11pt;
+    color: #333;
+  }
+
+  .formal-author-item {
+    margin-bottom: 3mm;
+  }
+
+  .formal-author-name {
+    font-weight: bold;
+    font-size: 12pt;
+    display: block;
+  }
+
+  .formal-author-nidn {
+    font-size: 11pt;
+    color: #555;
+    display: block;
+    margin-top: 0.5mm;
+  }
+
+
+  .approval-container {
+    margin: 5mm 0 10mm 0;
+    width: 100%;
+  }
+
+  .approval-row {
+    margin-bottom: 3mm;
+    clear: both;
+    font-size: 12pt;
+    line-height: 1.6;
+  }
+
+  .approval-no {
+    float: left;
+    width: 6mm;
+    font-weight: bold;
+  }
+
+  .approval-label {
+    float: left;
+    width: 55mm;
+  }
+
+  .approval-colon {
+    float: left;
+    width: 4mm;
+    text-align: center;
+  }
+
+  .approval-value {
+    margin-left: 65mm;
+    text-align: justify;
+    text-justify: inter-word;
+  }
+
+  .approval-list {
+    margin: 0;
+    padding: 0;
+  }
+
+
+  .signature-block {
+    margin-top: 15mm;
+    width: 100%;
+    clear: both;
+    font-size: 11pt;
+    line-height: 1.5;
+  }
+
+  .signature-left {
+    float: left;
+    width: 48%;
+    text-align: center;
+  }
+
+  .signature-right {
+    float: right;
+    width: 48%;
+    text-align: center;
+  }
+
+  .signature-space {
+    height: 25mm;
+  }
 
   .known-block {
-    margin: 20mm auto 0 auto;
+    margin: 15mm auto 0 auto;
     text-align: center;
     width: 100%;
     clear: both;
+    font-size: 11pt;
+    line-height: 1.5;
   }
 
   img {
@@ -173,7 +287,7 @@
   {% set luaran_wajib = luaran | selectattr("kategori_luaran", "equalto", "wajib") | list %}
   {% set luaran_tambahan = luaran | rejectattr("kategori_luaran", "equalto", "wajib") | list %}
 
-  <!-- HALAMAN PENGESAHAN -->
+
   <div class="page-break"></div>
 
   <div class="main-title">
@@ -181,105 +295,105 @@
     LAPORAN PENELITIAN
   </div>
 
-  <table class="approval-table">
-    <tr>
-      <td class="approval-no">1.</td>
-      <td class="approval-label">a. Judul Penelitian</td>
-      <td class="approval-colon">:</td>
-      <td>{{ judul_penelitian or judul or "-" }}</td>
-    </tr>
-    <tr>
-      <td></td>
-      <td>b. Bidang Fokus</td>
-      <td class="approval-colon">:</td>
-      <td>{{ bidang_fokus_rirn or "-" }}</td>
-    </tr>
+  <div class="approval-container">
+    <div class="approval-row">
+      <div class="approval-no">1.</div>
+      <div class="approval-label">a. Judul Penelitian</div>
+      <div class="approval-colon">:</div>
+      <div class="approval-value">{{ judul_penelitian or judul or "-" }}</div>
+    </div>
+    <div class="approval-row">
+      <div class="approval-no">&nbsp;</div>
+      <div class="approval-label">b. Bidang Fokus</div>
+      <div class="approval-colon">:</div>
+      <div class="approval-value">{{ bidang_fokus_rirn or "-" }}</div>
+    </div>
 
-    <tr><td colspan="4" style="height: 2mm;"></td></tr>
-
-    <tr>
-      <td>2.</td>
-      <td colspan="3">Ketua Peneliti</td>
-    </tr>
-    <tr>
-      <td></td>
-      <td>a. Nama Lengkap</td>
-      <td class="approval-colon">:</td>
-      <td>{{ ketua.nama if ketua else "-" }}</td>
-    </tr>
-    <tr>
-      <td></td>
-      <td>b. Jenis Kelamin</td>
-      <td class="approval-colon">:</td>
-      <td>{{ ketua.jenis_kelamin if ketua and ketua.jenis_kelamin is defined else "-" }}</td>
-    </tr>
-    <tr>
-      <td></td>
-      <td>c. NIDN/NIP</td>
-      <td class="approval-colon">:</td>
-      <td>{{ ketua.nidn_nip_nim if ketua else "-" }}</td>
-    </tr>
-    <tr>
-      <td></td>
-      <td>d. Jabatan Fungsional</td>
-      <td class="approval-colon">:</td>
-      <td>{{ ketua.jabatan_fungsional if ketua and ketua.jabatan_fungsional is defined else "-" }}</td>
-    </tr>
+    <div class="approval-row" style="margin-top: 4mm;">
+      <div class="approval-no">2.</div>
+      <div class="approval-label" style="font-weight: bold;">Ketua Peneliti</div>
+      <div class="approval-colon">&nbsp;</div>
+      <div class="approval-value">&nbsp;</div>
+    </div>
+    <div class="approval-row">
+      <div class="approval-no">&nbsp;</div>
+      <div class="approval-label">a. Nama Lengkap</div>
+      <div class="approval-colon">:</div>
+      <div class="approval-value">{{ ketua.nama if ketua else "-" }}</div>
+    </div>
+    <div class="approval-row">
+      <div class="approval-no">&nbsp;</div>
+      <div class="approval-label">b. Jenis Kelamin</div>
+      <div class="approval-colon">:</div>
+      <div class="approval-value">{{ ketua.jenis_kelamin if ketua and ketua.jenis_kelamin is defined else "-" }}</div>
+    </div>
+    <div class="approval-row">
+      <div class="approval-no">&nbsp;</div>
+      <div class="approval-label">c. NIDN/NIP</div>
+      <div class="approval-colon">:</div>
+      <div class="approval-value">{{ ketua.nidn_nip_nim if ketua else "-" }}</div>
+    </div>
+    <div class="approval-row">
+      <div class="approval-no">&nbsp;</div>
+      <div class="approval-label">d. Jabatan Fungsional</div>
+      <div class="approval-colon">:</div>
+      <div class="approval-value">{{ ketua.jabatan_fungsional if ketua and ketua.jabatan_fungsional is defined else "-" }}</div>
+    </div>
 
     {% if anggota %}
       {% for a in anggota %}
-        <tr><td colspan="4" style="height: 1mm;"></td></tr>
-        <tr>
-          <td>{{ loop.index + 2 }}.</td>
-          <td colspan="3">Anggota Peneliti {{ roman(loop.index) }}</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>a. Nama Lengkap</td>
-          <td class="approval-colon">:</td>
-          <td>{{ a.nama or "-" }}</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>Jenis Kelamin</td>
-          <td class="approval-colon">:</td>
-          <td>{{ a.jenis_kelamin if a.jenis_kelamin is defined else "-" }}</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>NIDN/NIP/NIM</td>
-          <td class="approval-colon">:</td>
-          <td>{{ a.nidn_nip_nim or "-" }}</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>Jabatan Fungsional</td>
-          <td class="approval-colon">:</td>
-          <td>{{ a.jabatan_fungsional if a.jabatan_fungsional is defined else "-" }}</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>Program Studi</td>
-          <td class="approval-colon">:</td>
-          <td>{{ a.program_studi or "-" }}</td>
-        </tr>
+        <div class="approval-row" style="margin-top: 4mm;">
+          <div class="approval-no">{{ loop.index + 2 }}.</div>
+          <div class="approval-label" style="font-weight: bold;">Anggota Peneliti {{ roman(loop.index) }}</div>
+          <div class="approval-colon">&nbsp;</div>
+          <div class="approval-value">&nbsp;</div>
+        </div>
+        <div class="approval-row">
+          <div class="approval-no">&nbsp;</div>
+          <div class="approval-label">a. Nama Lengkap</div>
+          <div class="approval-colon">:</div>
+          <div class="approval-value">{{ a.nama or "-" }}</div>
+        </div>
+        <div class="approval-row">
+          <div class="approval-no">&nbsp;</div>
+          <div class="approval-label">Jenis Kelamin</div>
+          <div class="approval-colon">:</div>
+          <div class="approval-value">{{ a.jenis_kelamin if a.jenis_kelamin is defined else "-" }}</div>
+        </div>
+        <div class="approval-row">
+          <div class="approval-no">&nbsp;</div>
+          <div class="approval-label">NIDN/NIP/NIM</div>
+          <div class="approval-colon">:</div>
+          <div class="approval-value">{{ a.nidn_nip_nim or "-" }}</div>
+        </div>
+        <div class="approval-row">
+          <div class="approval-no">&nbsp;</div>
+          <div class="approval-label">Jabatan Fungsional</div>
+          <div class="approval-colon">:</div>
+          <div class="approval-value">{{ a.jabatan_fungsional if a.jabatan_fungsional is defined else "-" }}</div>
+        </div>
+        <div class="approval-row">
+          <div class="approval-no">&nbsp;</div>
+          <div class="approval-label">Program Studi</div>
+          <div class="approval-colon">:</div>
+          <div class="approval-value">{{ a.program_studi or "-" }}</div>
+        </div>
       {% endfor %}
     {% endif %}
 
     {% set base_no = 2 + (anggota|length) %}
 
-    <tr><td colspan="4" style="height: 1mm;"></td></tr>
-    <tr>
-      <td>{{ base_no + 1 }}.</td>
-      <td>Lama Penelitian</td>
-      <td class="approval-colon">:</td>
-      <td>{{ lama_penelitian or "-" }}</td>
-    </tr>
-    <tr>
-      <td>{{ base_no + 2 }}.</td>
-      <td>Hasil Penelitian*</td>
-      <td class="approval-colon">:</td>
-      <td>
+    <div class="approval-row" style="margin-top: 4mm;">
+      <div class="approval-no">{{ base_no + 1 }}.</div>
+      <div class="approval-label">Lama Penelitian</div>
+      <div class="approval-colon">:</div>
+      <div class="approval-value">{{ lama_penelitian or "-" }}</div>
+    </div>
+    <div class="approval-row">
+      <div class="approval-no">{{ base_no + 2 }}.</div>
+      <div class="approval-label">Hasil Penelitian*</div>
+      <div class="approval-colon">:</div>
+      <div class="approval-value">
         {% set hasil_pilihan = parent_contents.hasil_penelitian_pilihan or [] %}
         {% if hasil_pilihan %}
           <div class="approval-list">
@@ -290,43 +404,41 @@
         {% else %}
           -
         {% endif %}
-      </td>
-    </tr>
-    <tr>
-      <td>{{ base_no + 3 }}.</td>
-      <td>Dana Penelitian yang dikeluarkan</td>
-      <td class="approval-colon">:</td>
-      <td><span class="currency">{{ money(dana_penelitian) }}</span></td>
-    </tr>
-  </table>
+      </div>
+    </div>
+    <div class="approval-row">
+      <div class="approval-no">{{ base_no + 3 }}.</div>
+      <div class="approval-label">Dana Penelitian yang dikeluarkan</div>
+      <div class="approval-colon">:</div>
+      <div class="approval-value"><span class="currency">{{ money(dana_penelitian) }}</span></div>
+    </div>
+  </div>
 
-  <table class="signature-table">
-    <tr>
-      <td>
-        Menyetujui,<br />
-        Plt. Ketua LPPM STT Terpadu Nurul Fikri
-        <div class="signature-space"></div>
-        <b>Muh Syaiful Romadhon, S.Kom., M.Kom.</b><br />
-        NIP. 1220198101
-      </td>
-      <td>
-        Depok, {{ tanggal_cetak if tanggal_cetak else "..................." }}<br />
-        Ketua Peneliti,
-        <div class="signature-space"></div>
-        <b>{{ ketua.nama if ketua else "(……………………………..)" }}</b>
-      </td>
-    </tr>
-  </table>
+  <div class="signature-block">
+    <div class="signature-left">
+      Menyetujui,<br />
+      Plt. Ketua LPPM STT Terpadu Nurul Fikri
+      <div class="signature-space"></div>
+      <b>Muh Syaiful Romadhon, S.Kom., M.Kom.</b><br />
+      NIP. 1220198101
+    </div>
+    <div class="signature-right">
+      Depok, {{ tanggal_cetak if tanggal_cetak else "..................." }}<br />
+      Ketua Peneliti,
+      <div class="signature-space"></div>
+      <b>{{ ketua.nama if ketua else "(……………………………..)" }}</b>
+    </div>
+  </div>
 
-  <div class="known-block center">
+  <div class="known-block">
     Mengetahui,<br />
     Ketua STT Terpadu Nurul Fikri
-    <div class="signature-space"></div>
+    <div class="signature-space" style="height: 20mm;"></div>
     <b>Dr. Lukman Rosyidi, M.M., M.T.</b><br />
     NIDN 0421117805
   </div>
 
-  <!-- PRAKATA -->
+
   <div class="page-break"></div>
 
   <h2>PRAKATA</h2>
@@ -362,7 +474,7 @@
     NIDN {{ ketua.nidn_nip_nim if ketua else "" }}
   </p>
 
-  <!-- DAFTAR ISI -->
+
   <div class="page-break"></div>
 
   <div class="main-title">DAFTAR ISI</div>
@@ -389,7 +501,7 @@
   <div class="toc-row toc-sub">11. DAFTAR PUSTAKA</div>
   <div class="toc-row">C. LAMPIRAN</div>
 
-  <!-- A. IDENTITAS PENELITIAN -->
+
   <div class="page-break"></div>
 
   <h2>A. IDENTITAS PENELITIAN</h2>
@@ -428,7 +540,7 @@
   <h3>3. Mitra Kerjasama Penelitian</h3>
   <table class="identity-table">
     <tr>
-      <th style="width: 35%;">Mitra</th>
+      <th style="width: 35%;">Jenis Mitra (Internal/Eksternal)</th>
       <th>Nama Mitra</th>
     </tr>
     {% if mitra %}
@@ -515,7 +627,7 @@
     {% endif %}
   </table>
 
-  <!-- B. HASIL PENELITIAN -->
+
   <div class="page-break"></div>
 
   <h2>B. HASIL PENELITIAN</h2>
@@ -599,7 +711,7 @@
   <h3>11. Daftar Pustaka</h3>
   <p>{{ contents.daftar_pustaka or progress_contents.daftar_pustaka or daftar_pustaka or "-" }}</p>
 
-  <!-- C. LAMPIRAN -->
+
   <div class="page-break"></div>
 
   <h2>C. Lampiran</h2>

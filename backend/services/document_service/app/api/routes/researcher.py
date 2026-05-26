@@ -44,7 +44,9 @@ def create_researcher(
         bidang_tugas=payload.bidang_tugas,
         id_sinta=payload.id_sinta,
         h_index=payload.h_index,
-        nidn_nip_nim=payload.nidn_nip_nim
+        nidn_nip_nim=payload.nidn_nip_nim,
+        jenis_kelamin=payload.jenis_kelamin,
+        jabatan_fungsional=payload.jabatan_fungsional
     )
 
     db.add(researcher)

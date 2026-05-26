@@ -2,12 +2,12 @@ import os
 import traceback
 import json
 
+# pyrefly: ignore [missing-import]
 from google import genai
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-
 
 # Load environment variables
 load_dotenv(override=True)
@@ -160,6 +160,8 @@ async def chat_with_gemini(request: ChatRequest):
             error_message = "API Key Gemini tidak valid atau tidak memiliki izin."
         elif "quota" in error_detail.lower() or "429" in error_detail:
             error_message = "Kuota API Gemini telah habis (Rate Limit). Silakan coba lagi nanti."
+        elif "503" in error_detail or "UNAVAILABLE" in error_detail or "high demand" in error_detail.lower():
+            error_message = "Server AI Google sedang sibuk dan tidak dapat merespons saat ini. Ini bersifat sementara, silakan coba lagi dalam beberapa menit."
         else:
             error_message = f"Terjadi kesalahan internal pada layanan AI: {error_detail}"
 
@@ -176,3 +178,6 @@ async def health_check():
         "service": "ai_service",
         "ai_ready": is_ai_ready
     }
+
+
+

@@ -12,6 +12,8 @@ class CreateResearcherRequest(BaseModel):
     id_sinta: Optional[str] = None
     h_index: Optional[int] = None
     nidn_nip_nim: Optional[str] = None
+    jenis_kelamin: Optional[str] = None
+    jabatan_fungsional: Optional[str] = None
 
 
 class UpdateResearcherRequest(BaseModel):
@@ -23,6 +25,8 @@ class UpdateResearcherRequest(BaseModel):
     id_sinta: Optional[str] = None
     h_index: Optional[int] = None
     nidn_nip_nim: Optional[str] = None
+    jenis_kelamin: Optional[str] = None
+    jabatan_fungsional: Optional[str] = None
 
 
 class ResearcherResponse(BaseModel):
@@ -36,6 +40,8 @@ class ResearcherResponse(BaseModel):
     id_sinta: Optional[str] = None
     h_index: Optional[int] = None
     nidn_nip_nim: Optional[str] = None
+    jenis_kelamin: Optional[str] = None
+    jabatan_fungsional: Optional[str] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 

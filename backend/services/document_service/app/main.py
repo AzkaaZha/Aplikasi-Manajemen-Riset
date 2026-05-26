@@ -59,9 +59,6 @@ app.include_router(schedule_router)
 app.include_router(output_router)
 app.include_router(researcher_router)
 app.include_router(partner_router)
-<<<<<<< HEAD
 app.include_router(research_router)  # ← Endpoint /researches/
 
 
-=======
->>>>>>> 49aba3087b3f855aa889c564c1139967a45e6cc4

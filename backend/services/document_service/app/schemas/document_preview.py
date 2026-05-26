@@ -41,6 +41,8 @@ class PreviewResearcherItem(BaseModel):
     id_sinta: Optional[str] = None
     h_index: Optional[int] = None
     nidn_nip_nim: Optional[str] = None
+    jenis_kelamin: Optional[str] = None
+    jabatan_fungsional: Optional[str] = None
 
 class PreviewPartnerItem(BaseModel):
     nama_mitra: str

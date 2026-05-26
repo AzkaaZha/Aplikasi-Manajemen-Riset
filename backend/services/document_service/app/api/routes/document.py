@@ -12,7 +12,6 @@ from app.schemas.document import (
     DocumentResponse,
     UpdateDocumentRequest,
 )
-<<<<<<< HEAD
 from app.schemas.document_related import RelatedDocumentsResponse
 from app.schemas.document_package import ResearchPackageResponse
 from app.models.researcher import Researcher
@@ -22,8 +21,6 @@ from app.models.schedule import Schedule
 from app.models.budget import Budget
 from app.models.document_content import DocumentContent
 from app.models.template_field import TemplateField
-=======
->>>>>>> 49aba3087b3f855aa889c564c1139967a45e6cc4
 from datetime import datetime
 import os
 
@@ -44,7 +41,6 @@ def placeholder():
     # Placeholder if any other routing relies on it, otherwise deleted.
     pass
 
-<<<<<<< HEAD
     if not proposal:
         raise HTTPException(
             status_code=404,
@@ -256,8 +252,6 @@ def get_my_research_packages(
         )
 
     return result
-=======
->>>>>>> 49aba3087b3f855aa889c564c1139967a45e6cc4
 
 @router.get("/{document_id}", response_model=DocumentResponse)
 def get_document_detail(

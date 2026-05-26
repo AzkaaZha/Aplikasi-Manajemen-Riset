@@ -16,5 +16,7 @@ class Researcher(Base):
     id_sinta = Column(String(50), nullable=True)
     h_index = Column(Integer, nullable=True)
     nidn_nip_nim = Column(String(50), nullable=True)
+    jenis_kelamin = Column(String(20), nullable=True)
+    jabatan_fungsional = Column(String(100), nullable=True)
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())

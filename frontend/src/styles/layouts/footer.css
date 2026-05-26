@@ -43,7 +43,7 @@
   transform: scale(1.18);
 }
 
-/* RESPONSIVE FOOTER */
+
 @media (max-width: 768px) {
   .footer-container {
     padding: 16px 20px;

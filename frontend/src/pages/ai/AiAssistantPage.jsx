@@ -41,7 +41,7 @@ const AiAssistantPage = ({ isOpen, onClose, context, documentType }) => {
     try {
       const summarizedContext = formatAiContext(context, documentType);
       
-      // history excludes the latest user message
+      
       const history = messages.slice(1); 
 
       const response = await chatWithAi(text, summarizedContext, history);
@@ -70,9 +70,9 @@ const AiAssistantPage = ({ isOpen, onClose, context, documentType }) => {
   };
 
   const handleCopy = (text) => {
-    // Remove HTML tags for simple copy if needed, but the user might want rich text
-    // For now, let's copy the raw text (which might have HTML tags)
-    // Actually, it's better to copy without tags for simple clipboard
+    
+    
+    
     const cleanText = text.replace(/<[^>]*>?/gm, '');
     navigator.clipboard.writeText(cleanText);
     alert("Teks berhasil disalin!");

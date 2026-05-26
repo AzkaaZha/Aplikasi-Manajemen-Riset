@@ -44,7 +44,7 @@ export default function UserListPage() {
 		if (!ok) return;
 		try {
 			await deleteUser(u.id);
-			// refresh list after delete
+			
 			setLoading(true);
 			try {
 				const data = await getUsers();

@@ -113,11 +113,10 @@ def list_researches(
 
     result = []
     for r in researches:
-        # Hitung jumlah dokumen milik penelitian ini
         jumlah_dokumen = db.query(Document).filter(Document.penelitian_id == r.id).count()
         result.append({
-            "id": r.id,                          # Tetap ada untuk backward-compat
-            "penelitian_id": r.id,               # Alias eksplisit — SELALU gunakan ini
+            "id": r.id,                          
+            "penelitian_id": r.id,               
             "user_id": r.user_id,
             "judul_penelitian": r.judul_penelitian,
             "tahun": r.tahun,
@@ -175,9 +174,6 @@ def update_research(
     if payload.tahun is not None:
         research.tahun = payload.tahun
 
-    # Manual status update removed as per requirements
-    # if payload.status_penelitian is not None:
-    #     research.status_penelitian = payload.status_penelitian
 
     db.commit()
     db.refresh(research)
@@ -213,8 +209,6 @@ def delete_research(
 
     print(f"[DELETE /researches/{research_id}] Ditemukan: '{research.judul_penelitian}'")
 
-    # Hapus semua dokumen terkait penelitian ini terlebih dahulu (cascade manual)
-    # agar tidak ada constraint error dari foreign key dokumen → penelitian
     related_documents = (
         db.query(Document)
         .filter(Document.penelitian_id == research_id)
@@ -226,7 +220,7 @@ def delete_research(
         print(f"[DELETE /researches/{research_id}]   - Menghapus dokumen.id={doc.id} ({doc.judul})")
         db.delete(doc)
 
-    db.flush()  # Flush dokumen dulu sebelum hapus penelitian
+    db.flush()  
 
     db.delete(research)
     db.commit()
@@ -260,8 +254,8 @@ def get_research_documents(
     def doc_to_dict(doc):
         """Konversi dokumen ke dict dengan alias yang jelas."""
         return {
-            "id": doc.id,              # dokumen.id — digunakan untuk buka/edit dokumen
-            "dokumen_id": doc.id,      # alias eksplisit
+            "id": doc.id,
+            "dokumen_id": doc.id,
             "penelitian_id": doc.penelitian_id,
             "jenis_dokumen_id": doc.jenis_dokumen_id,
             "template_id": doc.template_id,
@@ -288,8 +282,8 @@ def get_research_documents(
 
     return {
         "research": {
-            "id": research.id,               # backward-compat
-            "penelitian_id": research.id,     # alias eksplisit
+            "id": research.id,
+            "penelitian_id": research.id,
             "judul_penelitian": research.judul_penelitian,
             "tahun": research.tahun,
             "status_penelitian": research.status_penelitian
@@ -297,9 +291,9 @@ def get_research_documents(
         "documents": result
     }
 
-# -------------------------------------------------------------------------
-# NEW NESTED DOCUMENT ENDPOINTS
-# -------------------------------------------------------------------------
+
+
+
 
 class ActiveTemplateFieldItem(BaseModel):
     template_field_id: int
@@ -360,7 +354,7 @@ def create_nested_document(
     """
     research = get_owned_research_or_404(db, research_id, current_user)
     
-    # Validasi dokumen serupa
+
     existing_doc = (
         db.query(Document)
         .filter(
@@ -513,7 +507,7 @@ def update_nested_document(
 
     if payload.items:
         for item in payload.items:
-            # Upsert document content
+
             content = (
                 db.query(DocumentContent)
                 .filter(
@@ -617,7 +611,7 @@ def create_proposal_document(
     db.commit()
     db.refresh(document)
 
-    # Recalculate research status after document creation
+
     recalculate_research_status(db, research.id)
 
     return {
@@ -686,10 +680,10 @@ def create_progress_report_document(
     db.commit()
     db.refresh(document)
 
-    # Recalculate research status automatically
+
     recalculate_research_status(db, research.id)
 
-    # Salin data dari proposal
+
     copy_document_data(db, proposal.id, document.id, template.id)
 
     return {
@@ -758,10 +752,10 @@ def create_final_report_document(
     db.commit()
     db.refresh(document)
 
-    # Recalculate research status automatically
+
     recalculate_research_status(db, research.id)
 
-    # Salin data dari proposal
+
     copy_document_data(db, proposal.id, document.id, template.id)
 
     return {
@@ -778,27 +772,27 @@ def create_final_report_document(
     }
 
 def copy_document_data(db: Session, source_dokumen_id: int, target_dokumen_id: int, target_template_id: int):
-    # Copy Researchers
+
     for r in db.query(Researcher).filter(Researcher.dokumen_id == source_dokumen_id).all():
         db.add(Researcher(dokumen_id=target_dokumen_id, nama=r.nama, peran=r.peran, institusi=r.institusi, program_studi=r.program_studi, bidang_tugas=r.bidang_tugas, id_sinta=r.id_sinta, h_index=r.h_index, nidn_nip_nim=r.nidn_nip_nim))
 
-    # Copy Partners
+
     for p in db.query(Partner).filter(Partner.dokumen_id == source_dokumen_id).all():
         db.add(Partner(dokumen_id=target_dokumen_id, nama_mitra=p.nama_mitra, jenis_mitra=p.jenis_mitra, alamat=p.alamat, keterangan=p.keterangan))
 
-    # Copy Schedules
+
     for s in db.query(Schedule).filter(Schedule.dokumen_id == source_dokumen_id).all():
         db.add(Schedule(dokumen_id=target_dokumen_id, nama_kegiatan=s.nama_kegiatan, bulan_1=s.bulan_1, bulan_2=s.bulan_2, bulan_3=s.bulan_3, bulan_4=s.bulan_4, bulan_5=s.bulan_5, bulan_6=s.bulan_6, bulan_7=s.bulan_7, bulan_8=s.bulan_8, bulan_9=s.bulan_9, bulan_10=s.bulan_10, bulan_11=s.bulan_11, bulan_12=s.bulan_12))
 
-    # Copy Budgets
+
     for b in db.query(Budget).filter(Budget.dokumen_id == source_dokumen_id).all():
         db.add(Budget(dokumen_id=target_dokumen_id, jenis_pembelanjaan=b.jenis_pembelanjaan, item=b.item, satuan=b.satuan, volume=b.volume, biaya_satuan=b.biaya_satuan, total=b.total))
 
-    # Copy Outputs
+
     for o in db.query(Output).filter(Output.dokumen_id == source_dokumen_id).all():
         db.add(Output(dokumen_id=target_dokumen_id, kategori_luaran=o.kategori_luaran, jenis_luaran=o.jenis_luaran, status_target=o.status_target, keterangan=o.keterangan, tahun_luaran=o.tahun_luaran))
 
-    # Copy Contents (mapping fields by name)
+
     source_doc = db.query(Document).filter(Document.id == source_dokumen_id).first()
     target_doc = db.query(Document).filter(Document.id == target_dokumen_id).first()
     
@@ -815,7 +809,7 @@ def copy_document_data(db: Session, source_dokumen_id: int, target_dokumen_id: i
                 db.add(DocumentContent(dokumen_id=target_dokumen_id, template_field_id=target_fields[nama_field], isi=sc.isi))
                 copied_field_names.add(nama_field)
         
-        # Add default Prakata for Laporan Akhir if not copied
+
         if target_doc.jenis_dokumen_id == 3 and 'prakata' in target_fields and 'prakata' not in copied_field_names:
             research_judul = db.query(Research).filter(Research.id == target_doc.penelitian_id).first().judul_penelitian
             default_prakata = f"""<p>Bismillahirrohmanirrohim. Alhamdulillah segala puji bagi Allah SWT, yang telah melimpahkan rahmat dan ridho-Nya sehingga laporan penelitian dengan judul: <b>{research_judul}</b> dapat diselesaikan dengan baik.</p>

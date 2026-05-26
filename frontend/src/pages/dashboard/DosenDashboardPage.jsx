@@ -14,7 +14,7 @@ const NewUserDashboard = () => {
 
   return (
     <>
-      {/* Welcome Section */}
+      {}
       <div className="welcome-section">
         <div className="welcome-section-content">
           <h1>Selamat Datang di SIMR STT NF 👋</h1>
@@ -34,7 +34,7 @@ const NewUserDashboard = () => {
         </div>
       </div>
 
-      {/* Workflow Section */}
+      {}
       <div className="workflow-section">
         <h2 className="workflow-title">Alur Penelitian</h2>
         <p className="workflow-subtitle">Pahami langkah penting dalam mengelola penelitian Anda dari awal hingga akhir.</p>
@@ -54,7 +54,7 @@ const NewUserDashboard = () => {
 const ResearchDashboard = ({ researches }) => {
   const navigate = useNavigate();
 
-  // Hitung Summary Berdasarkan Real Data (otomatis dari backend via hook)
+  
   const totalResearches = researches.length;
   const completedResearches = researches.filter(r => r.status === 'Lengkap').length;
   const activeResearches = totalResearches - completedResearches;
@@ -65,7 +65,7 @@ const ResearchDashboard = ({ researches }) => {
     { icon: 'bi-check-circle', label: 'Penelitian Selesai', value: completedResearches, accent: 'info' },
   ];
 
-  // Helper untuk menentukan tahapan saat ini (Proposal / Kemajuan / Akhir / Selesai)
+  
   const getResearchProgressInfo = (r) => {
     if (r.laporan_akhir?.status_dokumen?.toLowerCase() === 'lengkap' || r.laporan_akhir?.status?.toLowerCase() === 'lengkap') {
       return { stage: 'selesai', progress: 100, label: 'Selesai' };
@@ -81,7 +81,7 @@ const ResearchDashboard = ({ researches }) => {
 
   return (
     <>
-      {/* Summary Cards */}
+      {}
       <div className="summary-grid">
         {summaryData.map((item) => (
           <div key={item.label} className="summary-card">
@@ -96,7 +96,7 @@ const ResearchDashboard = ({ researches }) => {
         ))}
       </div>
 
-      {/* Main Research Section */}
+      {}
       <div style={{ marginBottom: '28px' }}>
         <div className="dashboard-section-header">
           <h2 className="dashboard-section-title">Penelitian Terbaru</h2>

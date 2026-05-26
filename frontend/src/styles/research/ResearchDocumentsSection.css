@@ -1,4 +1,4 @@
-/* ---- SECTION HEADING ---- */
+
 .detail-section-heading {
   font-size: 1rem;
   font-weight: 700;
@@ -11,7 +11,7 @@
   gap: 8px;
 }
 
-/* ---- DOCUMENT CARDS GRID ---- */
+
 .doc-cards-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

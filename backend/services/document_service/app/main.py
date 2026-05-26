@@ -16,7 +16,7 @@ from app.api.routes.schedule import router as schedule_router
 from app.api.routes.output import router as output_router
 from app.api.routes.researcher import router as researcher_router
 from app.api.routes.partner import router as partner_router
-from app.api.routes.research import router as research_router  # ← Router penelitian
+from app.api.routes.research import router as research_router 
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -59,6 +59,6 @@ app.include_router(schedule_router)
 app.include_router(output_router)
 app.include_router(researcher_router)
 app.include_router(partner_router)
-app.include_router(research_router)  # ← Endpoint /researches/
+app.include_router(research_router)  
 
 

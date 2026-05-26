@@ -30,7 +30,7 @@ function DashboardLayout({ children, hideFooter = false }) {
 
   return (
     <div className={`app d-flex min-vh-100 ${isOpen ? "sidebar-open" : ""}`}>
-      {/* SIDEBAR */}
+      {}
       <Sidebar 
         isOpen={isOpen} 
         setIsOpen={setIsOpen} 
@@ -39,7 +39,7 @@ function DashboardLayout({ children, hideFooter = false }) {
         onLogout={handleLogout}
       />
 
-      {/* OVERLAY */}
+      {}
       {isOpen && (
         <div
           className="overlay"
@@ -47,11 +47,11 @@ function DashboardLayout({ children, hideFooter = false }) {
         ></div>
       )}
 
-      {/* MAIN CONTENT */}
+      {}
       <div className="main-content flex-grow-1 d-flex flex-column">
         <Navbar setIsOpen={setIsOpen} />
 
-        {/* SCROLLABLE AREA */}
+        {}
         <div className="content-area">
           <div className="p-3 p-md-4 flex-grow-1">
             {children}

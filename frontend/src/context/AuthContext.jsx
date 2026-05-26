@@ -18,7 +18,7 @@ export function AuthProvider({ children }) {
         return null;
     });
     const [token, setTokenState] = useState(getToken());
-    const [isLoading, setIsLoading] = useState(false); // No longer loading since we hydrate sync
+    const [isLoading, setIsLoading] = useState(false); 
 
     useEffect(() => {
         if (!token) {

@@ -1,7 +1,7 @@
 .stepper-wrapper {
   background: transparent;
-  padding: 12px 0 40px 0; /* Increased bottom padding for better breathing room */
-  border-bottom: 1px solid #f0f2f5; /* Subtle separation line */
+  padding: 12px 0 40px 0; 
+  border-bottom: 1px solid #f0f2f5; 
   margin-bottom: 32px;
   position: relative;
   z-index: 10;
@@ -60,7 +60,7 @@
   transition: all 0.3s ease;
 }
 
-/* Active State */
+
 .step-item.active .step-circle {
   background-color: var(--dark-blue);
   border-color: var(--dark-blue);
@@ -73,7 +73,7 @@
   font-weight: 600;
 }
 
-/* Completed State */
+
 .step-item.completed .step-circle {
   background-color: var(--green);
   border-color: var(--green);

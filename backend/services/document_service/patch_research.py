@@ -12,7 +12,7 @@ replacement = """    db.add(document)
     db.commit()
     db.refresh(document)
 
-    # Clone data from proposal
+
     copy_document_data(db, proposal.id, document.id, template.id)
 
     return {

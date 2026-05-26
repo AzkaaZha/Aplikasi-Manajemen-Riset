@@ -1,10 +1,6 @@
 import { aiApiClient } from "./axiosClient";
 
-/**
- * Helper to summarize document context into essential fields only.
- * @param {Object} formData - Full document form data
- * @param {string} documentType - proposal, kemajuan, or akhir
- */
+
 export const formatAiContext = (formData, documentType) => {
   if (!formData) return {};
 
@@ -18,22 +14,17 @@ export const formatAiContext = (formData, documentType) => {
     kata_kunci: formData.kata_kunci || "",
   };
 
-  // Clean up empty fields to keep payload small
+  
   return Object.fromEntries(
     Object.entries(context).filter(([_, v]) => v !== "" && v !== null && v !== undefined)
   );
 };
 
-/**
- * Send chat message to AI backend.
- * @param {string} message - User message
- * @param {Object} context - Summarized document context
- * @param {Array} history - Chat history [{text, isAi}, ...]
- */
+
 export const chatWithAi = async (message, context = {}, history = []) => {
   try {
-    // Transform frontend history format to backend format if necessary
-    // Backend expects history as a list of message objects
+    
+    
     const formattedHistory = history.map(msg => ({
       role: msg.isAi ? "assistant" : "user",
       content: msg.text

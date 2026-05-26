@@ -1,4 +1,4 @@
-/* Lampiran Step Styling */
+
 
 .lampiran-upload-card {
     background: #ffffff;
@@ -66,7 +66,7 @@
     font-size: 1.25rem;
 }
 
-/* Badge Customization */
+
 .badge-custom {
     display: inline-block;
     padding: 4px 10px;
@@ -82,11 +82,11 @@
     background: transparent;
 }
 
-/* Form refinement - Removed redundant definitions to use global document-form.css */
 
-/* Button is now using global .btn-add from document-form.css */
 
-/* Responsive Table Adjustments */
+
+
+
 @media (max-width: 768px) {
     .custom-table-container {
         overflow-x: auto;

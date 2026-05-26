@@ -2,19 +2,19 @@ import os
 import traceback
 import json
 
-# pyrefly: ignore [missing-import]
+
 from google import genai
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-# Load environment variables
+
 load_dotenv(override=True)
 
 app = FastAPI(title="AI Service for Research Management")
 
-# Configure CORS
+
 origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
@@ -28,7 +28,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# AI Client Configuration
+
 client = None
 is_ai_ready = False
 api_key = os.getenv("GEMINI_API_KEY")
@@ -99,23 +99,23 @@ async def chat_with_gemini(request: ChatRequest):
                     instruction += f"- {key}: {value}\n"
             instruction += "\n"
 
-        # Prepare content for google-genai
+
         contents = []
         
-        # Add history
+
         for msg in request.history:
             contents.append({
                 "role": "user" if msg.role == "user" else "model",
                 "parts": [{"text": msg.content}]
             })
             
-        # Add current message with instruction
+
         contents.append({
             "role": "user",
             "parts": [{"text": f"{instruction}\n\nUser Question: {request.message}"}]
         })
 
-        # Attempt to generate content
+
         target_model = "gemini-2.0-flash"
         try:
             print(f"Using model: {target_model}")
@@ -155,7 +155,7 @@ async def chat_with_gemini(request: ChatRequest):
         traceback.print_exc()
         error_detail = str(error)
         
-        # Friendly error messages
+
         if "API_KEY_INVALID" in error_detail or "403" in error_detail:
             error_message = "API Key Gemini tidak valid atau tidak memiliki izin."
         elif "quota" in error_detail.lower() or "429" in error_detail:

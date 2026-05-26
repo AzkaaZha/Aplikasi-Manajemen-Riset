@@ -7,7 +7,7 @@ function DocumentCard({ title, data }) {
 
   return (
     <div className="document-card">
-      {/* HEADER */}
+      {}
       <div
         className="document-card-header d-flex justify-content-between align-items-center"
         onClick={toggleOpen}
@@ -21,7 +21,7 @@ function DocumentCard({ title, data }) {
         />
       </div>
 
-      {/* BODY */}
+      {}
       {open && (
         <div className="document-card-body">
           {data.map((item, index) => (

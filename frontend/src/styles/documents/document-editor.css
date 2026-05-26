@@ -17,13 +17,13 @@
   padding-top: 0px;
 }
 
-/* New Stable Floating Back Button */
+
 .back-button-bar {
   position: fixed;
-  top: 72px; /* Navbar height */
+  top: 72px; 
   left: 0;
   right: 0;
-  z-index: 990; /* Below navbar (1000) to slide under it */
+  z-index: 990; 
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   height: 50px;
@@ -36,7 +36,7 @@
   transform: translateY(0);
 }
 
-/* Sidebar context */
+
 .sidebar-open .back-button-bar {
   left: 280px;
 }
@@ -46,10 +46,7 @@
   pointer-events: none;
 }
 
-/* Adjust left position based on sidebar state if possible, 
-   but since we are inside main-content wrapper, we can use a simpler approach 
-   if we change it to sticky but absolute positioned child. 
-   Actually, let's keep it simple for now and align it with the wrapper. */
+
 
 .back-button {
   display: flex;
@@ -99,7 +96,7 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Push effect when AI is open */
+
 .editor-container.ai-open {
   margin-right: 380px;
 }
@@ -160,7 +157,7 @@
   }
 }
 
-/* Ensure action buttons and AI assistant do not overlap */
+
 .editor-action-buttons {
   position: sticky;
   bottom: 0;

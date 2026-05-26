@@ -28,7 +28,7 @@ function AdminLayout({ children }) {
 
   return (
     <div className={`app d-flex min-vh-100 ${isOpen ? "sidebar-open" : ""}`}>
-      {/* SIDEBAR */}
+      {}
       <Sidebar 
         isOpen={isOpen} 
         setIsOpen={setIsOpen} 
@@ -37,7 +37,7 @@ function AdminLayout({ children }) {
         onLogout={handleLogout}
       />
 
-      {/* OVERLAY */}
+      {}
       {isOpen && (
         <div
           className="overlay"
@@ -45,11 +45,11 @@ function AdminLayout({ children }) {
         ></div>
       )}
 
-      {/* MAIN CONTENT */}
+      {}
       <div className="main-content flex-grow-1 d-flex flex-column" style={{ backgroundColor: "#f8f9fa" }}>
         <Navbar setIsOpen={setIsOpen} />
 
-        {/* SCROLLABLE AREA */}
+        {}
         <div className="content-area d-flex flex-column flex-grow-1" style={{ overflowY: 'auto' }}>
           <div className="p-3 p-md-4 flex-grow-1">
             {children}

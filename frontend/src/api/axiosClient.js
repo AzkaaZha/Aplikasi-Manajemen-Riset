@@ -30,7 +30,7 @@ aiApiClient.interceptors.request.use(attachToken);
 
 const handleAuthError = (error) => {
   if (error.response && error.response.status === 401) {
-    // Clear token and redirect to login
+    
     removeToken();
     window.location.href = '/login';
   }

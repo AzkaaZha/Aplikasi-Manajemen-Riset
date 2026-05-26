@@ -80,15 +80,15 @@ def recalculate_research_status(db: Session, research_id: int):
     if not research:
         return
 
-    # Hitung jumlah jenis dokumen unik yang sudah dibuat
-    # 1: Proposal, 2: Laporan Kemajuan, 3: Laporan Akhir
+
+
     doc_types = db.query(Document.jenis_dokumen_id).filter(
         Document.penelitian_id == research_id
     ).distinct().all()
     
     unique_types = [t[0] for t in doc_types]
     
-    # Syarat Lengkap: Harus punya jenis 1, 2, dan 3
+
     if 1 in unique_types and 2 in unique_types and 3 in unique_types:
         research.status_penelitian = "selesai"
     else:

@@ -54,7 +54,7 @@ def save_document_contents(
 ):
     document = get_owned_document_or_404(db, document_id, current_user)
     
-    # Import Research locally or at module level (assuming app.models.research.Research)
+
     from app.models.research import Research
 
     for item in payload.items:
@@ -73,7 +73,7 @@ def save_document_contents(
                 detail=f"Template field id {item.template_field_id} tidak valid untuk dokumen ini",
             )
             
-        # Sanitize HTML isi
+
         sanitized_isi = bleach.clean(
             item.isi,
             tags=ALLOWED_TAGS,
@@ -100,10 +100,10 @@ def save_document_contents(
             )
             db.add(new_content)
             
-        # Sync to Research and Document if field is judul_penelitian
+
         if field.nama_field == 'judul_penelitian' and sanitized_isi:
             plain_text_title = bleach.clean(sanitized_isi, tags=[], strip=True)
-            # Remove HTML entities like &nbsp;
+
             plain_text_title = plain_text_title.replace('&nbsp;', ' ').strip()
             
             research = db.query(Research).filter(Research.id == document.penelitian_id).first()
@@ -130,7 +130,7 @@ def get_document_contents(
         .all()
     )
     
-    # Sync judul_penelitian from Research to the returned contents so form is pre-filled
+
     research = db.query(Research).filter(Research.id == document.penelitian_id).first()
     judul_field = db.query(TemplateField).filter(
         TemplateField.template_id == document.template_id,
@@ -142,7 +142,7 @@ def get_document_contents(
         if existing:
             existing.isi = research.judul_penelitian
         else:
-            # Append a virtual content so frontend gets it
+
             contents.append(
                 DocumentContent(
                     id=0,

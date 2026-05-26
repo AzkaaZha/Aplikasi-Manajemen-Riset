@@ -17,11 +17,11 @@ export default function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* AUTH */}
+        {}
         <Route path="/" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
 
-        {/* DASHBOARD */}
+        {}
         <Route
           path="/dashboard"
           element={
@@ -67,7 +67,7 @@ export default function AppRouter() {
           }
         />
 
-        {/* DOCUMENT (MASIH DUMMY) */}
+        {}
         <Route
           path="/penelitian"
           element={

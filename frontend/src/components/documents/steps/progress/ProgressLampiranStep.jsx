@@ -49,7 +49,7 @@ const ProgressLampiranStep = ({ data, documentId, refreshData }) => {
     try {
       console.log("DEBUG: [Lampiran] Memulai Upload...");
       
-      // Menyiapkan FormData untuk upload beneran ke backend
+      
       const uploadData = new FormData();
       uploadData.append("file", formData.file);
       uploadData.append("nama_lampiran", formData.nama);
@@ -66,14 +66,14 @@ const ProgressLampiranStep = ({ data, documentId, refreshData }) => {
         file: null
       });
       
-      // Reset input file secara manual
+      
       const fileInput = document.getElementById("fileInput");
       if (fileInput) fileInput.value = "";
 
       if (refreshData) refreshData();
     } catch (err) {
       console.error("DEBUG: [Lampiran] Upload Error:", err.response?.data || err.message);
-      // Fallback: Jika backend belum ada, beri simulasi frontend (TODO)
+      
       if (err.response?.status === 404 || err.message.includes("404")) {
          alert("Fitur upload ke server belum tersedia (404). Silakan hubungi admin untuk aktivasi endpoint.");
       } else {

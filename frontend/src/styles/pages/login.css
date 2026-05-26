@@ -75,7 +75,7 @@
   border-top: 1px solid #f0f0f0;
 }
 
-/* ERROR & STATE STYLES */
+
 .error-state-container {
   min-height: 25px;
   margin-bottom: 5px;
@@ -91,7 +91,7 @@
   gap: 6px;
 }
 
-/* INPUT COMPONENT STYLES */
+
 .input-group-custom {
   margin-bottom: 0.4rem;
 }
@@ -130,7 +130,7 @@
     padding: 0 20px 20px 20px;
   }
 
-  /* SweetAlert2 Mobile Adjustments */
+  
   body .swal2-container .swal2-popup {
     width: 85%;
     padding: 1.5rem 1rem;

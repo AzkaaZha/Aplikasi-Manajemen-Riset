@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 
 function ResearchFilters({ searchTerm, setSearchTerm, statusFilter, setStatusFilter, yearSort, setYearSort }) {
-  const [openFilter, setOpenFilter] = useState(null); // 'status' or 'year'
+  const [openFilter, setOpenFilter] = useState(null); 
   const statusRef = useRef(null);
   const yearRef = useRef(null);
 
@@ -28,7 +28,7 @@ function ResearchFilters({ searchTerm, setSearchTerm, statusFilter, setStatusFil
 
   return (
     <div className="research-filter-section">
-      {/* SEARCH BAR */}
+      {}
       <div className="search-bar-group">
         <i className="bi bi-search"></i>
         <input 
@@ -40,10 +40,10 @@ function ResearchFilters({ searchTerm, setSearchTerm, statusFilter, setStatusFil
         />
       </div>
       
-      {/* FILTER ACTIONS */}
+      {}
       <div className="filter-actions">
         
-        {/* STATUS FILTER */}
+        {}
         <div className="custom-filter-dropdown" ref={statusRef}>
           <div 
             className={`filter-trigger ${openFilter === 'status' ? 'active' : ''}`}
@@ -61,7 +61,7 @@ function ResearchFilters({ searchTerm, setSearchTerm, statusFilter, setStatusFil
           )}
         </div>
 
-        {/* YEAR SORT */}
+        {}
         <div className="custom-filter-dropdown" ref={yearRef}>
           <div 
             className={`filter-trigger ${openFilter === 'year' ? 'active' : ''}`}

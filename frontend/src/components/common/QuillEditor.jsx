@@ -61,7 +61,7 @@ const QuillEditor = ({ value, onChange, modules, theme = "snow", placeholder = "
 
       quill.on("selection-change", (range) => {
         if (range && range.length === 0) {
-          // Focus gained (cursor is active)
+          
           if (onFocus) onFocus();
         }
       });

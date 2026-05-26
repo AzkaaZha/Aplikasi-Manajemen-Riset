@@ -59,10 +59,7 @@ export const deleteResearch = async (penelitianId) => {
   }
 };
 
-/**
- * Membuat Laporan Kemajuan berdasarkan penelitian_id.
- * Endpoint: POST /researches/{penelitian_id}/documents/progress-report
- */
+
 export const createProgressReportByResearch = async (penelitianId) => {
   console.log(`[API] Membuat laporan kemajuan untuk penelitian_id: ${penelitianId}`);
   const response = await documentApiClient.post(
@@ -71,10 +68,7 @@ export const createProgressReportByResearch = async (penelitianId) => {
   return response.data;
 };
 
-/**
- * Membuat Laporan Akhir berdasarkan penelitian_id.
- * Endpoint: POST /researches/{penelitian_id}/documents/final-report
- */
+
 export const createFinalReportByResearch = async (penelitianId) => {
   console.log(`[API] Membuat laporan akhir untuk penelitian_id: ${penelitianId}`);
   const response = await documentApiClient.post(

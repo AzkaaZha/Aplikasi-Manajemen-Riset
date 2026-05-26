@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: space-between;
   height: 72px;
-  /* Ditingkatkan dari 64px agar lebih premium */
+  
   padding: 0 32px;
   background-color: var(--secondary-bg);
   width: 100%;
@@ -13,7 +13,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
-/* LEFT */
+
 .nav-left {
   display: flex;
   align-items: center;
@@ -48,7 +48,7 @@
   box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* CENTER - Absolute Centering yang Sangat Stabil */
+
 .nav-center {
   position: absolute;
   left: 50%;
@@ -60,7 +60,7 @@
 
 .nav-center h5 {
   font-size: 1.2rem;
-  /* Ukuran font diperbesar */
+  
   font-weight: 700;
   color: var(--dark-blue);
   margin: 0;
@@ -68,7 +68,7 @@
   letter-spacing: 0.5px;
 }
 
-/* RIGHT */
+
 .nav-right {
   display: flex;
   align-items: center;
@@ -106,7 +106,7 @@
   align-items: center;
 }
 
-/* RESPONSIVE NAVBAR */
+
 @media (max-width: 991px) {
   .navbar-container {
     height: 64px;
@@ -117,7 +117,7 @@
 @media (max-width: 768px) {
   .nav-profile-meta {
     display: none;
-    /* Sembunyikan info nama/role di mobile */
+    
   }
 
   .nav-center h5 {

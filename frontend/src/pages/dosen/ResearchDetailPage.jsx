@@ -10,7 +10,7 @@ import ResearchDocumentsSection from "../../components/research/ResearchDocument
 import "../../styles/research/ResearchDetailPage.css";
 
 function ResearchDetailPage() {
-  const { id } = useParams(); // id di URL = penelitian_id
+  const { id } = useParams(); 
 
   const [research, setResearch]   = useState(null);
   const [documents, setDocuments] = useState(null);
@@ -34,7 +34,7 @@ function ResearchDetailPage() {
 
           setResearch({
             ...res,
-            penelitian_id: res.id,  // alias eksplisit
+            penelitian_id: res.id,  
             nama: res.judul_penelitian,
             status: status,
             tahun: res.tahun
@@ -54,7 +54,7 @@ function ResearchDetailPage() {
     fetchAll();
   }, [id]);
 
-  // ── Loading State ───────────────────────────────────────────────────
+  
   if (loading) {
     return (
       <DashboardLayout>
@@ -68,7 +68,7 @@ function ResearchDetailPage() {
     );
   }
 
-  // ── Not Found ────────────────────────────────────────────────────────
+  
   if (notFound || !research) {
     return (
       <DashboardLayout>
@@ -85,7 +85,7 @@ function ResearchDetailPage() {
     );
   }
 
-  // ── Main Render ──────────────────────────────────────────────────────
+  
   return (
     <DashboardLayout>
       <div className="detail-container">

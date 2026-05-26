@@ -1,4 +1,4 @@
-/* Global table styles to ensure consistent modern minimal look across the app */
+
 :root {
   --table-header-bg: var(--dark-blue);
   --table-header-color: #ffffff;
@@ -15,7 +15,7 @@
   -webkit-overflow-scrolling: touch;
 }
 
-/* Base table reset */
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -40,20 +40,20 @@ tbody td {
   vertical-align: middle;
 }
 
-/* Subtle hover */
+
 tbody tr:hover td {
   background: var(--table-row-hover);
   transition: background-color 120ms ease-in-out;
 }
 
-/* Action column buttons spacing */
+
 .table-actions {
   display: flex;
   gap: 8px;
   align-items: center;
 }
 
-/* Empty and loading states */
+
 .table-empty,
 .table-loading {
   padding: 16px;
@@ -64,7 +64,7 @@ tbody tr:hover td {
   text-align: center;
 }
 
-/* Responsive tweaks */
+
 @media (max-width: 768px) {
   .table thead th, table thead th {
     padding: 10px 12px;
@@ -76,7 +76,7 @@ tbody tr:hover td {
   }
 }
 
-/* Utility: make any table wrapper horizontal scrollable with nice spacing */
+
 .table-wrapper,
 .research-table-container,
 .custom-table-container,
@@ -86,7 +86,7 @@ tbody tr:hover td {
   background: #fff;
   border: 1px solid #e9ecef;
   border-radius: 12px;
-  /* Changed from hidden to visible to allow dropdowns/popovers to show */
+  
   overflow: visible;
 }
 
@@ -98,13 +98,13 @@ tbody tr:hover td {
   padding-bottom: 4px;
 }
 
-/* Ensure inputs/selects inside table cells don't overflow */
+
 .table-wrapper input,
 .table-wrapper select {
   max-width: 100%;
 }
 
-/* Match existing specific table classes so headers follow the same dark blue style */
+
 .research-table thead th,
 .custom-table thead th,
 .preview-table thead th,

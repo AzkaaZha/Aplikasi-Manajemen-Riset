@@ -1,4 +1,4 @@
-/* Research Page Layout Styles */
+
 .research-container {
   padding: 0 10px;
 }
@@ -53,7 +53,7 @@
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
   border: 1px solid #edf2f7;
-  /* Removed overflow: hidden to allow dropdowns to pop out */
+  
   position: relative;
   margin-bottom: 40px;
 }

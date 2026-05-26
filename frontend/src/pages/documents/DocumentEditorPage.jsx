@@ -15,7 +15,7 @@ import {
   getResearchDetail
 } from "../../api/documentApi";
 
-// STEPS
+
 import SubstansiStep from "../../components/documents/steps/proposal/SubstansiStep";
 import PengusulStep from "../../components/documents/steps/proposal/PengusulStep";
 import MitraStep from "../../components/documents/steps/proposal/MitraStep";
@@ -42,7 +42,7 @@ import FinalLampiranStep from "../../components/documents/steps/final/FinalLampi
 import FinalSelesaiStep from "../../components/documents/steps/final/FinalSelesaiStep";
 import AiAssistantPage from "../ai/AiAssistantPage";
 
-// STYLES
+
 import "../../styles/documents/document-editor.css";
 import "../../styles/documents/document-stepper.css";
 import "../../styles/documents/document-navigation.css";
@@ -149,7 +149,7 @@ const DocumentEditorPage = () => {
             flatData[f.nama_field] = f.nama_field === "hasil_penelitian_pilihan" ? [] : "";
           });
 
-          // Fallback data pengusul/mitra/identitas dari proposal jika ada
+          
           if (jenisDokId > 1 && researchDetail.documents) {
             const proposal = researchDetail.documents.proposal;
             if (proposal) {
@@ -162,7 +162,7 @@ const DocumentEditorPage = () => {
                   return f ? f.isi : "";
                 };
 
-                // Identitas Fields
+                
                 flatData.judul_penelitian = researchDetail.research?.judul_penelitian || proposalRes.judul || "";
                 flatData.bidang_fokus_rirn = getProposalFieldVal("bidang_fokus_rirn") || "";
                 flatData.tema_penelitian = getProposalFieldVal("tema_penelitian") || "";
@@ -172,7 +172,7 @@ const DocumentEditorPage = () => {
                 flatData.lama_penelitian = getProposalFieldVal("lama_penelitian") || "";
                 flatData.kata_kunci = getProposalFieldVal("kata_kunci") || "";
 
-                // Pre-fill manual field dana_penelitian from budget sum
+                
                 if (proposalRes.budgets && proposalRes.budgets.length > 0) {
                   const totalBudget = proposalRes.budgets.reduce((sum, b) => sum + Number(b.total || 0), 0);
                   flatData.dana_penelitian = totalBudget;
@@ -180,7 +180,7 @@ const DocumentEditorPage = () => {
                   flatData.dana_penelitian = "";
                 }
 
-                // Copy matching fields
+                
                 templateData.fields?.forEach(f => {
                   const val = getProposalFieldVal(f.nama_field);
                   if (val) {
@@ -192,12 +192,12 @@ const DocumentEditorPage = () => {
                   }
                 });
 
-                // Manual mapping rule 7: Proposal's metode_penelitian -> Laporan Akhir's metode
+                
                 if (mapping["metode"] && !flatData["metode"]) {
                   flatData["metode"] = getProposalFieldVal("metode_penelitian") || getProposalFieldVal("metode");
                 }
 
-                // Copy sub-tables
+                
                 flatData.pengusul = proposalRes.researchers || [];
                 flatData.mitra = proposalRes.partners || [];
                 flatData.luaran = proposalRes.outputs || [];
@@ -236,7 +236,7 @@ const DocumentEditorPage = () => {
             }
           }
 
-          // Fallback lookup via getResearchDetail just in case parent_dokumen_id is empty but it's nested
+          
           if (!proposalRes && res.jenis_dokumen_id > 1) {
             try {
               const researchDetail = await getResearchDetail(researchId);
@@ -296,14 +296,14 @@ const DocumentEditorPage = () => {
           flatData.anggaran = res.budgets?.length > 0 ? res.budgets : (proposalRes?.budgets || []);
           flatData.lampiranFiles = filesRes || [];
 
-          // Load Identitas Fields from Proposal (for laporan kemajuan/akhir fallback only)
+          
           if (proposalRes) {
             const getProposalFieldVal = (name) => {
               const f = proposalRes.fields?.find(field => field.nama_field === name);
               return f ? f.isi : "";
             };
 
-            // Only fill from proposal if NOT already populated from the doc's own saved data
+            
             if (!flatData.judul_penelitian) flatData.judul_penelitian = getProposalFieldVal("judul_penelitian") || proposalRes.judul || "";
             if (!flatData.bidang_fokus_rirn) flatData.bidang_fokus_rirn = getProposalFieldVal("bidang_fokus_rirn") || "";
             if (!flatData.tema_penelitian) flatData.tema_penelitian = getProposalFieldVal("tema_penelitian") || "";
@@ -313,7 +313,7 @@ const DocumentEditorPage = () => {
             if (!flatData.lama_penelitian) flatData.lama_penelitian = getProposalFieldVal("lama_penelitian") || "";
             if (!flatData.kata_kunci) flatData.kata_kunci = getProposalFieldVal("kata_kunci") || "";
 
-            // Populate dana_penelitian
+            
             const targetDanaField = res.fields?.find(f => f.nama_field === "dana_penelitian");
             const targetDana = targetDanaField ? targetDanaField.isi : res.dana_penelitian;
             if (targetDana !== undefined && targetDana !== null && targetDana !== "") {
@@ -325,10 +325,10 @@ const DocumentEditorPage = () => {
               flatData.dana_penelitian = flatData.dana_penelitian || "";
             }
           }
-          // NOTE: For proposal docs (jenis_dokumen_id=1), proposalRes is null — fields are already
-          // loaded directly from the document's own DB records above via mapFields(). Do NOT overwrite them.
+          
+          
 
-          // Merge research detail title just in case
+          
           try {
             const researchDetail = await getResearchDetail(researchId);
             if (researchDetail?.research?.judul_penelitian) {
@@ -357,7 +357,7 @@ const DocumentEditorPage = () => {
     const contentArea = document.querySelector('.content-area');
     if (!contentArea) return;
 
-    // Scroll to top when component mounts or document changes
+    
     contentArea.scrollTo({ top: 0, behavior: "smooth" });
 
     const handleScroll = () => {
@@ -387,7 +387,7 @@ const DocumentEditorPage = () => {
   const handleSave = async (silent = false) => {
     if (!silent) setSaving(true);
     try {
-      // Ensure we have a title for the document payload
+      
       let docTitle = formData.judul_dokumen || formData.judul_penelitian;
       if (!docTitle || docTitle === "-") {
         docTitle = "Dokumen Penelitian";

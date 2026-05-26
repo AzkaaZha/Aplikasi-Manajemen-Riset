@@ -1,4 +1,4 @@
-/* Reusable Admin Form Styling - Consistent with Document Editor */
+
 
 .admin-form-container {
   max-width: 800px;
@@ -82,7 +82,7 @@
   display: block;
 }
 
-/* Actions matching Document Editor */
+
 .admin-form-actions {
   display: flex;
   justify-content: flex-end;

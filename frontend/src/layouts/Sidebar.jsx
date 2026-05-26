@@ -28,7 +28,7 @@ function Sidebar({
     <aside
       className={`sidebar-container ${isOpen ? "sidebar-open" : "sidebar-close"}`}
     >
-      {/* HEADER */}
+      {}
       <div className="sidebar-header">
         <div className="sidebar-logo">
           <div className="logo-circle">NF</div>
@@ -42,7 +42,7 @@ function Sidebar({
       </div>
 
 
-      {/* MAIN MENU */}
+      {}
       <div className="sidebar-section-title">MENU</div>
       <ul className="sidebar-nav">
         {menuItems.map((item, index) => (
@@ -60,7 +60,7 @@ function Sidebar({
       </ul>
 
 
-      {/* SIDEBAR FOOTER */}
+      {}
       <div className="sidebar-footer">
         <a
           href="#"

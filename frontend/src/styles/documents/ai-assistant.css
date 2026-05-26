@@ -1,6 +1,6 @@
 .ai-floating-btn {
   position: fixed;
-  /* Safe position inside the card area to avoid border collision */
+  
   right: 48px; 
   bottom: 84px; 
   width: 44px;
@@ -21,7 +21,7 @@
 
 @media (min-width: 1200px) {
   .ai-floating-btn {
-    /* Aligned with content row interior on large screens */
+    
     right: calc(50% - 600px + 48px);
   }
 }
@@ -229,7 +229,7 @@
   color: var(--dark-blue);
 }
 
-/* Loading Dots Animation */
+
 .ai-bubble.loading {
   display: flex;
   gap: 4px;
@@ -265,8 +265,8 @@
     right: -100%;
   }
   .ai-floating-btn {
-    right: 24px; /* Aligned with form card padding */
-    bottom: 210px; /* Reduced elevation but still clears buttons */
+    right: 24px; 
+    bottom: 210px; 
     z-index: 1100;
     width: 48px;
     height: 48px;

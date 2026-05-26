@@ -376,7 +376,7 @@ def delete_document(
     db.delete(document)
     db.commit()
 
-    # Recalculate research status after deletion
+
     if research_id:
         from app.services.document_helpers import recalculate_research_status
         recalculate_research_status(db, research_id)
@@ -414,7 +414,7 @@ def copy_proposal_data_to_report(
     report_id: int,
     template_id: int
 ):
-    # Copy IsiDokumen (mapping by nama_field)
+
     proposal_contents = (
         db.query(DocumentContent, TemplateField.nama_field)
         .join(TemplateField, DocumentContent.template_field_id == TemplateField.id)
@@ -435,7 +435,7 @@ def copy_proposal_data_to_report(
             )
             db.add(new_content)
 
-    # Copy Researchers
+
     researchers = db.query(Researcher).filter(Researcher.dokumen_id == proposal_id).all()
     for r in researchers:
         new_r = Researcher(
@@ -446,7 +446,7 @@ def copy_proposal_data_to_report(
         )
         db.add(new_r)
 
-    # Copy Partners
+
     partners = db.query(Partner).filter(Partner.dokumen_id == proposal_id).all()
     for p in partners:
         new_p = Partner(
@@ -456,7 +456,7 @@ def copy_proposal_data_to_report(
         )
         db.add(new_p)
 
-    # Copy Outputs
+
     outputs = db.query(Output).filter(Output.dokumen_id == proposal_id).all()
     for o in outputs:
         new_o = Output(
@@ -467,7 +467,7 @@ def copy_proposal_data_to_report(
         )
         db.add(new_o)
 
-    # Copy Schedules
+
     schedules = db.query(Schedule).filter(Schedule.dokumen_id == proposal_id).all()
     for s in schedules:
         new_s = Schedule(
@@ -479,7 +479,7 @@ def copy_proposal_data_to_report(
         )
         db.add(new_s)
 
-    # Copy Budgets
+
     budgets = db.query(Budget).filter(Budget.dokumen_id == proposal_id).all()
     for b in budgets:
         new_b = Budget(

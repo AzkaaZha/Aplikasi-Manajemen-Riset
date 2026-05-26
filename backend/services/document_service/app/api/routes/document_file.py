@@ -36,30 +36,30 @@ def upload_document_file(
     if not document:
         raise HTTPException(status_code=404, detail="Dokumen tidak ditemukan")
 
-    # Setup storage directory
+
     storage_dir = Path(__file__).resolve().parents[3] / "storage" / "uploads"
     storage_dir.mkdir(parents=True, exist_ok=True)
 
-    # Generate unique filename
+
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     file_ext = Path(file.filename).suffix
-    # Use nama_lampiran for the filename but keep it safe
+
     safe_name = "".join(c for c in nama_lampiran if c.isalnum() or c in (' ', '.', '_')).rstrip()
     safe_name = safe_name.replace(' ', '_')
     unique_filename = f"{safe_name}_{timestamp}{file_ext}"
     file_path = storage_dir / unique_filename
 
-    # Save physical file
+
     try:
         with file_path.open("wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Gagal menyimpan file: {str(e)}")
 
-    # Create database record
+
     new_file = FileDocument(
         dokumen_id=document_id,
-        nama_file=nama_lampiran, # Simpan nama asli lampiran dari user
+        nama_file=nama_lampiran,
         file_path=str(file_path),
         tipe_file=tipe_lampiran.lower(),
     )

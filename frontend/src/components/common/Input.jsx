@@ -11,7 +11,7 @@ export default function Input({ label, type = "text", name, value, onChange, pla
         onChange={onChange}
         required={required}
       />
-      {/* Reserve space for error message to prevent layout shift */}
+      {}
       <div className="input-error-wrapper">
         {error && (
           <div className="input-error-text">

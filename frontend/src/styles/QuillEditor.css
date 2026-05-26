@@ -1,11 +1,11 @@
-/* Quill Editor Wrapper - Ensure dropdown visibility */
+
 .quill-editor-wrapper {
   position: relative;
   overflow: visible;
   margin-bottom: 1rem;
 }
 
-/* Toolbar Styling */
+
 .quill-editor-wrapper .ql-toolbar.ql-snow {
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
@@ -26,25 +26,25 @@
   font-size: 14px;
 }
 
-/* Picker Labels & Items */
+
 .quill-editor-wrapper .ql-snow .ql-picker.ql-font { width: 150px; }
 .quill-editor-wrapper .ql-snow .ql-picker.ql-size { width: 90px; }
 .quill-editor-wrapper .ql-snow .ql-picker.ql-header { width: 110px; }
 
-/* Font styles */
+
 .ql-font-poppins { font-family: 'Poppins', sans-serif; }
 .ql-font-times-new-roman { font-family: 'Times New Roman', serif; }
 .ql-font-arial { font-family: Arial, sans-serif; }
 .ql-font-calibri { font-family: 'Calibri', 'Candara', 'Segoe UI', sans-serif; }
 
-/* Font Labels */
+
 .ql-snow .ql-picker.ql-font .ql-picker-label:not([data-value])::before { content: "Poppins"; }
 .ql-picker-item[data-value="poppins"]::before, .ql-picker-label[data-value="poppins"]::before { content: "Poppins"; }
 .ql-picker-item[data-value="times-new-roman"]::before, .ql-picker-label[data-value="times-new-roman"]::before { content: "Times New Roman"; }
 .ql-picker-item[data-value="arial"]::before, .ql-picker-label[data-value="arial"]::before { content: "Arial"; }
 .ql-picker-item[data-value="calibri"]::before, .ql-picker-label[data-value="calibri"]::before { content: "Calibri"; }
 
-/* Size Labels & Styles */
+
 .ql-snow .ql-picker.ql-size .ql-picker-label::before,
 .ql-snow .ql-picker.ql-size .ql-picker-item::before { content: "Size"; }
 
@@ -62,7 +62,7 @@
 .ql-size-24px { font-size: 24px; }
 .ql-size-32px { font-size: 32px; }
 
-/* Alignment Dropdown Fix */
+
 .quill-editor-wrapper .ql-snow .ql-picker.ql-align {
   width: 34px;
 }
@@ -72,7 +72,7 @@
   left: auto;
 }
 
-/* Ensure alignment icons are visible in dropdown */
+
 .quill-editor-wrapper .ql-snow .ql-picker.ql-align .ql-picker-options .ql-picker-item {
   padding: 4px;
   display: flex;
@@ -85,7 +85,7 @@
   min-width: 40px;
 }
 
-/* Picker styles */
+
 .quill-editor-wrapper .ql-snow .ql-picker-options {
   z-index: 9999;
   background: #fff;
@@ -105,7 +105,7 @@
   color: var(--dark-blue);
 }
 
-/* Responsive adjustments */
+
 @media (max-width: 768px) {
   .ql-toolbar.ql-snow {
     display: flex;
@@ -115,7 +115,7 @@
   .quill-editor-wrapper .ql-snow .ql-picker.ql-font { width: 110px; }
 }
 
-/* Center images in editor */
+
 .ql-editor img {
   display: block;
   margin: 0 auto;

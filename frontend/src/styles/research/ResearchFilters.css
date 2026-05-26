@@ -1,4 +1,4 @@
-/* --- Filter & Search Section --- */
+
 .research-filter-section {
   padding: 20px 24px;
   display: flex;
@@ -47,7 +47,7 @@
   gap: 12px;
 }
 
-/* --- Custom Filter Dropdown --- */
+
 .custom-filter-dropdown {
   position: relative;
   min-width: 170px;
@@ -128,7 +128,7 @@
   color: #ffffff;
 }
 
-/* --- Responsive --- */
+
 @media (max-width: 991px) {
   .research-filter-section {
     flex-direction: column;

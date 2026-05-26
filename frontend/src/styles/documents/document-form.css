@@ -62,7 +62,7 @@
   color: #6c757d;
 }
 
-/* React Quill Custom Styling */
+
 .quill {
   border-radius: 12px;
   overflow: visible;
@@ -91,12 +91,12 @@
   line-height: 1.6;
 }
 
-/* Ensure containers don't clip the Quill dropdown */
+
 .form-card {
   overflow: visible;
 }
 
-/* Additional support for parent containers */
+
 .quill-editor-wrapper,
 .quill-wrapper,
 .document-editor-card,
@@ -104,7 +104,7 @@
   overflow: visible;
 }
 
-/* Readonly field styling — replaces inline styles */
+
 input.form-control.form-control-readonly, 
 textarea.form-control.form-control-readonly, 
 select.form-select.form-control-readonly,
@@ -128,7 +128,7 @@ select.form-select.form-control-readonly,
   box-shadow: none;
 }
 
-/* Tambah button — replaces inline styles */
+
 .btn-add {
   background-color: var(--dark-blue);
   border-color: var(--dark-blue);
@@ -149,7 +149,7 @@ select.form-select.form-control-readonly,
   color: #fff;
 }
 
-/* Schedule indicator — replaces inline style in jadwal table */
+
 .schedule-indicator {
   width: 16px;
   height: 16px;
@@ -158,20 +158,20 @@ select.form-select.form-control-readonly,
   margin: 0 auto;
 }
 
-/* Error text shared */
+
 .form-error-text {
   color: #d63384;
   font-size: 13px;
   margin-top: 6px;
 }
 
-/* Helper text shared */
+
 .form-helper-text {
   color: #6c757d;
   font-size: 13px;
   margin-top: 8px;
 }
-/* Utilities */
+
 .form-card .max-w-600 { max-width: 600px; }
 .form-card .text-dark-blue { color: var(--dark-blue); }
 .form-card .fs-14 { font-size: 14px; }
@@ -180,7 +180,7 @@ select.form-select.form-control-readonly,
   min-height: auto;
 }
 
-/* Selesai Step Styles */
+
 .success-icon-wrapper {
   width: 80px;
   height: 80px;
@@ -214,7 +214,7 @@ select.form-select.form-control-readonly,
   transform: none;
 }
 
-/* PDF Export Styling */
+
 .pdf-content,
 .pdf-content * {
   font-family: "Times New Roman", Times, serif !important;

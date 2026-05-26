@@ -1,4 +1,4 @@
-/* --- Table Styles --- */
+
 .research-table-container {
   width: 100%;
   overflow: visible;
@@ -12,7 +12,7 @@
   table-layout: auto;
 }
 
-/* Lebar Kolom */
+
 .research-table th:nth-child(1),
 .research-table td:nth-child(1) {
   width: 70px;
@@ -90,7 +90,7 @@
   font-weight: 500;
 }
 
-/* --- Status Badges --- */
+
 .status-badge {
   padding: 6px 14px;
   border-radius: 50px;
@@ -110,7 +110,7 @@
   color: #15803d;
 }
 
-/* --- Action Dropdown --- */
+
 .research-table td.action-cell {
   position: relative;
   text-align: left;
@@ -196,7 +196,7 @@
   color: #ffffff;
 }
 
-/* --- Loading & Empty State --- */
+
 .research-loading {
   display: flex;
   flex-direction: column;
@@ -221,7 +221,7 @@
   margin: 0;
 }
 
-/* --- Responsive --- */
+
 @media (max-width: 768px) {
   .research-table {
     min-width: 760px;

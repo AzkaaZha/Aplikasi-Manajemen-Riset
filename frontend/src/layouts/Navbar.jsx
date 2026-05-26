@@ -10,7 +10,7 @@ function Navbar({ setIsOpen }) {
   return (
     <nav className="navbar-container">
 
-      {/* LEFT - Menu Toggle */}
+      {}
       <div className="nav-left">
         <button
           className="btn-menu"
@@ -21,12 +21,12 @@ function Navbar({ setIsOpen }) {
         </button>
       </div>
 
-      {/* CENTER - Branding */}
+      {}
       <div className="nav-center">
         <h5>SIMR STT NF</h5>
       </div>
 
-      {/* RIGHT - User Profile */}
+      {}
       <div className="nav-right">
         <div className="nav-profile-meta text-end me-2">
           <div className="nav-user-name">

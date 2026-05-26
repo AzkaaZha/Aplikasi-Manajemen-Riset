@@ -84,7 +84,7 @@ function ResearchPage() {
 
     try {
       if (isEditMode) {
-        // Selalu gunakan penelitian_id untuk edit, bukan dokumen.id
+        
         const penelitianId = selectedResearch?.penelitian_id || selectedResearch?.id;
         console.log('[handleSubmit] Edit penelitian ID:', penelitianId, '| Data:', form);
         await editResearch(penelitianId, form);
@@ -111,7 +111,7 @@ function ResearchPage() {
 
 
   const handleDeleteResearch = async () => {
-    // PENTING: Selalu gunakan penelitian_id, bukan dokumen.id
+    
     const penelitianId = selectedResearch?.penelitian_id || selectedResearch?.researchId;
 
     console.log('[handleDeleteResearch] selectedResearch lengkap:', selectedResearch);

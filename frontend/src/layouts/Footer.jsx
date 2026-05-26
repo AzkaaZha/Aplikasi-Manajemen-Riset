@@ -2,12 +2,12 @@ function Footer() {
   return (
     <footer className="footer-container">
       <div className="footer-content">
-        {/* LEFT - COPYRIGHT */}
+        {}
         <div className="footer-left">
           <span>&copy; {new Date().getFullYear()} <strong>STT Terpadu Nurul Fikri</strong>. Hak Cipta Dilindungi.</span>
         </div>
 
-        {/* RIGHT - SOCIAL MEDIA LINKS */}
+        {}
         <div className="footer-right">
           <div className="footer-social-links">
             <a href="https://www.instagram.com/stttepadunurulfikri/" target="_blank" rel="noopener noreferrer" title="Instagram">

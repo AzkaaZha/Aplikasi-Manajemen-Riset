@@ -1,4 +1,4 @@
-/* --- Modal Styling --- */
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -44,10 +44,10 @@
 }
 
 .close-modal:hover {
-  color: #dc3545; /* Clean error color */
+  color: #dc3545; 
 }
 
-/* --- Form Elements --- */
+
 .research-form-group {
   margin-bottom: 20px;
 }
@@ -96,7 +96,7 @@
   box-shadow: 0 4px 12px rgba(11, 49, 65, 0.2);
 }
 
-/* --- Status Change Options --- */
+
 .status-option {
   display: flex;
   align-items: center;

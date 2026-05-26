@@ -52,7 +52,7 @@ function Login() {
       const user = await getMe();
       loginContext(user, result.access_token);
 
-      // Tampilkan Pop Up Berhasil
+      
       Swal.fire({
         icon: "success",
         title: "Selamat Datang Kembali",
@@ -74,9 +74,9 @@ function Login() {
 
       const msgLower = typeof message === 'string' ? message.toLowerCase() : "";
 
-      // Smart error assignment
+      
       if (msgLower.includes("email") && msgLower.includes("password")) {
-        // If it mentions both, it's a generic error - show at the top
+        
         setErrors(prev => ({ ...prev, general: message }));
       } else if (msgLower.includes("email") || msgLower.includes("user")) {
         setErrors(prev => ({ ...prev, email: message }));
@@ -93,16 +93,16 @@ function Login() {
   return (
     <div className="login-page">
       <div className="login-card">
-        {/* HEADER */}
+        {}
         <div className="login-header">
           <div className="logo-circle mx-auto mb-3">NF</div>
           <h4 className="fw-bold mb-1">SIMR STT NF</h4>
           <p className="text-muted small">Masuk untuk mengelola sistem manajemen riset</p>
         </div>
 
-        {/* BODY */}
+        {}
         <div className="login-body">
-          {/* Alert Error General */}
+          {}
           <ErrorState message={errors.general} />
 
           <form onSubmit={handleLogin}>

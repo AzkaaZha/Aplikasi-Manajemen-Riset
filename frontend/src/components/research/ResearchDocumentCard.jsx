@@ -35,10 +35,8 @@ const ResearchDocumentCard = ({ label, icon, dokumen, type, researchId, isDisabl
     navigate(`/researches/${researchId}/documents/create/${jenisDokumenId}`);
   };
 
-  const isDraft = dokumen?.status?.toUpperCase() === 'DRAFT' || dokumen?.status_dokumen?.toUpperCase() === 'DRAFT';
-  const hasData = !!dokumen?.terakhir_autosave;
-
   const renderDocumentButton = () => {
+    // Dokumen belum ada DAN terkunci → tampilkan tombol kunci
     if (isDisabled && !isCreated) {
       return (
         <button
@@ -51,18 +49,18 @@ const ResearchDocumentCard = ({ label, icon, dokumen, type, researchId, isDisabl
       );
     }
 
-    if (!isCreated || (isCreated && !hasData)) {
-      return !isCreated ? (
+    // Dokumen belum ada → tampilkan tombol "Buat Dokumen"
+    if (!isCreated) {
+      return (
         <button onClick={handleCreate} className="btn-doc-action buat">
           <i className="bi bi-plus-circle"></i> Buat Dokumen
         </button>
-      ) : (
-        <Link to={`/researches/${researchId}/documents/${dokumen.id}/edit`} className="btn-doc-action buat">
-          <i className="bi bi-plus-circle"></i> Buat Dokumen
-        </Link>
       );
     }
 
+    // Dokumen sudah ada (draft maupun lengkap) → selalu tampilkan "Buka Dokumen"
+    // terakhir_autosave tidak lagi digunakan sebagai kondisi, karena dokumen valid
+    // jika id-nya ada, dan user harus bisa membukanya kapanpun.
     return (
       <Link to={`/researches/${researchId}/documents/${dokumen.id}/edit`} className="btn-doc-action buka">
         <i className="bi bi-folder2-open"></i> Buka Dokumen

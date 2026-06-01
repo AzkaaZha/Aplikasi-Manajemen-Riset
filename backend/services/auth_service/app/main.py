@@ -7,8 +7,11 @@ from app.api.routes.health import router as health_router
 from app.api.routes.user import router as user_router
 from app.api.routes.auth import router as auth_router
 from app.models import Role, User
+from app.db.session import Base, engine
 
 app = FastAPI(title=APP_NAME)
+
+Base.metadata.create_all(bind=engine)
 
 origins=[
     "http://localhost:5173",

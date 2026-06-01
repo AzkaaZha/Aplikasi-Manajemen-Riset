@@ -34,21 +34,35 @@ const CheckboxField = ({ label, name, options, selectedValues = [], onChange, re
           })}
         </div>
       ) : (
-        <div className="checkbox-list">
-          {options.map((opt) => (
-            <div key={opt.value} className="form-check form-check-inline">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id={`${name}-${opt.value}`}
-                checked={selectedValues.includes(opt.value)}
-                onChange={() => handleChange(opt.value)}
-              />
-              <label className="form-check-label" htmlFor={`${name}-${opt.value}`}>
-                {opt.label}
-              </label>
-            </div>
-          ))}
+        <div className="checkbox-grid-section">
+          <div className="checkbox-grid">
+            {options.map((opt) => {
+              const isChecked = selectedValues.includes(opt.value);
+              return (
+                <label
+                  key={opt.value}
+                  className={`checkbox-grid-item${isChecked ? " checked" : ""}`}
+                  htmlFor={`${name}-${opt.value}`}
+                >
+                  <input
+                    className="checkbox-grid-input"
+                    type="checkbox"
+                    id={`${name}-${opt.value}`}
+                    checked={isChecked}
+                    onChange={() => handleChange(opt.value)}
+                  />
+                  <span className="checkbox-grid-indicator">
+                    {isChecked && (
+                      <svg width="11" height="9" viewBox="0 0 11 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 4L4 7.5L10 1" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    )}
+                  </span>
+                  <span className="checkbox-grid-label">{opt.label}</span>
+                </label>
+              );
+            })}
+          </div>
         </div>
       )}
       

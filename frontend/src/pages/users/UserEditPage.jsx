@@ -14,6 +14,7 @@ export default function UserEditPage() {
 	useEffect(() => {
 		const fetch = async () => {
 			setLoading(true);
+
 			try {
 				const data = await getUserById(id);
 				setUser(data);
@@ -25,12 +26,15 @@ export default function UserEditPage() {
 				setLoading(false);
 			}
 		};
+
 		fetch();
-	}, [id]);
+	}, [id, navigate]);
 
 	const handleSubmit = async (payload) => {
 		try {
 			await updateUser(id, payload);
+
+			alert('Pengguna berhasil diperbarui');
 			navigate('/admin/users');
 		} catch (err) {
 			console.error(err);
@@ -40,10 +44,14 @@ export default function UserEditPage() {
 
 	return (
 		<AdminLayout title="Edit Pengguna">
-
-
-			{loading && <div className="users-loading">Memuat...</div>}
-			{user && <UserForm initialData={user} isEdit onCancel={() => navigate('/admin/users')} onSubmit={handleSubmit} />}
+			{user && (
+				<UserForm
+					initialData={user}
+					isEdit
+					onCancel={() => navigate('/admin/users')}
+					onSubmit={handleSubmit}
+				/>
+			)}
 		</AdminLayout>
 	);
 }

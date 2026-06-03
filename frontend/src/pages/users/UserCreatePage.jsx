@@ -11,8 +11,11 @@ export default function UserCreatePage() {
 
 	const handleSubmit = async (payload) => {
 		setSubmitting(true);
+
 		try {
 			await createUser(payload);
+
+			alert('Pengguna berhasil ditambahkan');
 			navigate('/admin/users');
 		} catch (err) {
 			console.error(err);
@@ -24,10 +27,10 @@ export default function UserCreatePage() {
 
 	return (
 		<AdminLayout title="Tambah Pengguna">
-
-
-			<UserForm onCancel={() => navigate('/admin/users')} onSubmit={handleSubmit} />
-			{submitting && <div className="users-loading">Menyimpan...</div>}
+			<UserForm
+				onCancel={() => navigate('/admin/users')}
+				onSubmit={handleSubmit}
+			/>
 		</AdminLayout>
 	);
 }

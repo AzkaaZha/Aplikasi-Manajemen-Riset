@@ -14,7 +14,7 @@ const NewUserDashboard = () => {
 
   return (
     <>
-      {}
+      { }
       <div className="welcome-section">
         <div className="welcome-section-content">
           <h1>Selamat Datang di SIMR STT NF 👋</h1>
@@ -34,7 +34,7 @@ const NewUserDashboard = () => {
         </div>
       </div>
 
-      {}
+      { }
       <div className="workflow-section">
         <h2 className="workflow-title">Alur Penelitian</h2>
         <p className="workflow-subtitle">Pahami langkah penting dalam mengelola penelitian Anda dari awal hingga akhir.</p>
@@ -54,7 +54,7 @@ const NewUserDashboard = () => {
 const ResearchDashboard = ({ researches }) => {
   const navigate = useNavigate();
 
-  
+
   const totalResearches = researches.length;
   const completedResearches = researches.filter(r => r.status === 'Lengkap').length;
   const activeResearches = totalResearches - completedResearches;
@@ -65,23 +65,45 @@ const ResearchDashboard = ({ researches }) => {
     { icon: 'bi-check-circle', label: 'Penelitian Selesai', value: completedResearches, accent: 'info' },
   ];
 
-  
+
   const getResearchProgressInfo = (r) => {
-    if (r.laporan_akhir?.status_dokumen?.toLowerCase() === 'lengkap' || r.laporan_akhir?.status?.toLowerCase() === 'lengkap') {
-      return { stage: 'selesai', progress: 100, label: 'Selesai' };
+    const statusPenelitian = (
+      r.status_penelitian ||
+      r.status ||
+      ""
+    ).toLowerCase();
+
+    if (statusPenelitian === "lengkap" || statusPenelitian === "selesai") {
+      return { stage: "selesai", progress: 100, label: "Selesai" };
     }
-    if (r.laporan_kemajuan?.status_dokumen?.toLowerCase() === 'lengkap' || r.laporan_kemajuan?.status?.toLowerCase() === 'lengkap') {
-      return { stage: 'akhir', progress: 75, label: 'Laporan Akhir' };
+
+    if (
+      r.laporan_akhir?.status_dokumen?.toLowerCase() === "lengkap" ||
+      r.laporan_akhir?.status?.toLowerCase() === "lengkap"
+    ) {
+      return { stage: "selesai", progress: 100, label: "Selesai" };
     }
-    if (r.proposal?.status_dokumen?.toLowerCase() === 'lengkap' || r.proposal?.status?.toLowerCase() === 'lengkap') {
-      return { stage: 'kemajuan', progress: 50, label: 'Laporan Kemajuan' };
+
+    if (
+      r.laporan_kemajuan?.status_dokumen?.toLowerCase() === "lengkap" ||
+      r.laporan_kemajuan?.status?.toLowerCase() === "lengkap"
+    ) {
+      return { stage: "akhir", progress: 75, label: "Laporan Akhir" };
     }
-    return { stage: 'proposal', progress: 25, label: 'Proposal' };
+
+    if (
+      r.proposal?.status_dokumen?.toLowerCase() === "lengkap" ||
+      r.proposal?.status?.toLowerCase() === "lengkap"
+    ) {
+      return { stage: "kemajuan", progress: 50, label: "Laporan Kemajuan" };
+    }
+
+    return { stage: "proposal", progress: 25, label: "Proposal" };
   };
 
   return (
     <>
-      {}
+      { }
       <div className="summary-grid">
         {summaryData.map((item) => (
           <div key={item.label} className="summary-card">
@@ -96,7 +118,7 @@ const ResearchDashboard = ({ researches }) => {
         ))}
       </div>
 
-      {}
+      { }
       <div style={{ marginBottom: '28px' }}>
         <div className="dashboard-section-header">
           <h2 className="dashboard-section-title">Penelitian Terbaru</h2>

@@ -1,0 +1,32 @@
+.admin-layout {
+    min-height: 100vh;
+    display: flex;
+    background-color: #f8f9fa;
+    overflow: hidden;
+}
+
+.admin-main-content {
+    flex: 1;
+    min-width: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f8f9fa;
+}
+
+.admin-content-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.admin-page-content {
+    flex: 1;
+    padding: 24px;
+}
+
+.admin-footer-wrapper {
+    flex-shrink: 0;
+}

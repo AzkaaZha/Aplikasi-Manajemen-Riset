@@ -44,7 +44,7 @@ export default function UserListPage() {
 		if (!ok) return;
 		try {
 			await deleteUser(u.id);
-			
+
 			setLoading(true);
 			try {
 				const data = await getUsers();
@@ -70,7 +70,7 @@ export default function UserListPage() {
 				</div>
 
 				<div>
-					<button className="btn btn-save" onClick={() => navigate('/admin/users/create')}>
+					<button className="btn-add-user" onClick={() => navigate('/admin/users/create')}>
 						Tambah Pengguna
 					</button>
 				</div>

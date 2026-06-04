@@ -169,6 +169,23 @@ def create_final_report_from_proposal(
             detail="Proposal tidak ditemukan",
         )
 
+    progress_report = (
+        db.query(Document)
+        .filter(
+            Document.parent_dokumen_id == proposal_id,
+            Document.user_id == int(current_user["id"]),
+            Document.jenis_dokumen_id == 2,
+        )
+        .order_by(Document.created_at.desc())
+        .first()
+    )
+
+    if not progress_report:
+        raise HTTPException(
+            status_code=400,
+        detail="Laporan kemajuan harus dibuat terlebih dahulu",
+    )
+
     existing_report = (
         db.query(Document)
         .filter(
@@ -204,7 +221,7 @@ def create_final_report_from_proposal(
     db.commit()
     db.refresh(new_report)
 
-    copy_proposal_data_to_report(db, proposal.id, new_report.id, template.id)
+    copy_proposal_data_to_report(db, progress_report.id, new_report.id, template.id)
 
     return new_report
 

@@ -32,7 +32,6 @@
     background: rgba(11, 49, 65, 0.04);
 }
 
-
 .users-table .btn {
     padding: 8px 12px;
     margin-right: 8px;
@@ -40,24 +39,53 @@
     border-radius: 8px;
     cursor: pointer;
     font-size: 13px;
-    transition: 0.2s ease;
+    transition: background-color 0.2s ease;
+}
+
+.btn-add-user {
+    background: var(--green);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+.btn-add-user:hover,
+.btn-add-user:focus,
+.btn-add-user:active {
+    background: #029641;
+    color: #fff;
+    text-decoration: none;
+    box-shadow: none;
 }
 
 .btn-edit {
-    background: #0d6efd;
-    color: #fff;
-}
-
-.btn-delete {
-    background: #dc3545;
+    background: var(--dark-blue);
     color: #fff;
 }
 
 .btn-edit:hover,
-.btn-delete:hover {
-    opacity: 0.9;
+.btn-edit:focus,
+.btn-edit:active {
+    background: #082633;
+    color: #fff;
+    box-shadow: none;
 }
 
+.btn-delete {
+    background: var(--maroon);
+    color: #fff;
+}
+
+.btn-delete:hover,
+.btn-delete:focus,
+.btn-delete:active {
+    background: #611822;
+    color: #fff;
+    box-shadow: none;
+}
 
 .users-loading,
 .users-empty {
@@ -68,7 +96,6 @@
     text-align: center;
     color: #6c757d;
 }
-
 
 @media (max-width: 720px) {
     .users-table {

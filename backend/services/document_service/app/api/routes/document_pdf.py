@@ -68,6 +68,22 @@ def export_pdf(
                 resolved_template_id = active_template.id
 
         preview = get_document_preview(document_id, db, current_user)
+        
+        def clean_document_title(value):
+            if not value:
+                return value
+            return (
+                value
+                .replace("Proposal - ", "")
+                .replace("Laporan Kemajuan - ", "")
+                .replace("Laporan Akhir - ", "")
+            )
+
+        judul_bersih = clean_document_title(
+            preview.get("judul_penelitian")
+            or preview.get("judul")
+            or document.judul
+        )
 
         template_dir = Path(__file__).resolve().parents[2] / "templates"
         static_dir = Path(__file__).resolve().parents[2] / "static"
@@ -114,6 +130,8 @@ def export_pdf(
 
         render_data = {
             **preview,
+            "judul": judul_bersih,
+            "judul_penelitian": judul_bersih,
             "cover_bg_url": cover_bg_url,
             "logo_sttnf_url": logo_sttnf_url,
             "tahun": "2026",

@@ -11,28 +11,18 @@ export default function UserListPage() {
 	const [error, setError] = useState('');
 	const navigate = useNavigate();
 
-	useEffect(() => {
-		let mounted = true;
-		(async () => {
-			if (!mounted) return;
-			setLoading(true);
-			setError('');
-			try {
-				const data = await getUsers();
-				if (!mounted) return;
-				setUsers(data || []);
-			} catch (err) {
-				console.error(err);
-				if (!mounted) return;
-				setError('Gagal mengambil data pengguna');
-			} finally {
-				if (mounted) setLoading(false);
-			}
-		})();
+	const fetchUsers = async () => {
+		try {
+			const data = await getUsers();
+			setUsers(data || []);
+		} catch (err) {
+			console.error(err);
+			setError('Gagal mengambil data pengguna');
+		}
+	};
 
-		return () => {
-			mounted = false;
-		};
+	useEffect(() => {
+		fetchUsers();
 	}, []);
 
 	const handleEdit = (u) => {
@@ -42,22 +32,19 @@ export default function UserListPage() {
 	const handleDelete = async (u) => {
 		const ok = window.confirm(`Apakah Anda yakin ingin menghapus pengguna ${u.nama}?`);
 		if (!ok) return;
+
 		try {
-			await deleteUser(u.id);
-			
 			setLoading(true);
-			try {
-				const data = await getUsers();
-				setUsers(data || []);
-			} catch (err) {
-				console.error(err);
-				setError('Gagal mengambil data pengguna');
-			} finally {
-				setLoading(false);
-			}
+
+			await deleteUser(u.id);
+			await fetchUsers();
+
+			alert('Pengguna berhasil dihapus');
 		} catch (err) {
 			console.error(err);
 			alert('Gagal menghapus pengguna');
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -70,7 +57,10 @@ export default function UserListPage() {
 				</div>
 
 				<div>
-					<button className="btn btn-save" onClick={() => navigate('/admin/users/create')}>
+					<button
+						className="btn-add-user"
+						onClick={() => navigate('/admin/users/create')}
+					>
 						Tambah Pengguna
 					</button>
 				</div>
@@ -78,7 +68,12 @@ export default function UserListPage() {
 
 			{error && <div className="users-error">{error}</div>}
 
-			<UserTable users={users} loading={loading} onEdit={handleEdit} onDelete={handleDelete} />
+			<UserTable
+				users={users}
+				loading={false}
+				onEdit={handleEdit}
+				onDelete={handleDelete}
+			/>
 		</AdminLayout>
 	);
 }

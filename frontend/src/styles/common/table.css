@@ -87,7 +87,8 @@ tbody tr:hover td {
   border: 1px solid #e9ecef;
   border-radius: 12px;
   
-  overflow: visible;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .table-wrapper {
@@ -116,4 +117,57 @@ tbody tr:hover td {
   color: #fff;
   padding: var(--table-padding-vertical) var(--table-padding-horizontal);
   border-bottom: none;
+}
+
+/* Custom Sleek Scrollbar for Table Containers */
+.table-wrapper::-webkit-scrollbar,
+.research-table-container::-webkit-scrollbar,
+.custom-table-container::-webkit-scrollbar,
+.preview-table-wrapper::-webkit-scrollbar,
+.users-table-wrapper::-webkit-scrollbar,
+.table-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.table-wrapper::-webkit-scrollbar-track,
+.research-table-container::-webkit-scrollbar-track,
+.custom-table-container::-webkit-scrollbar-track,
+.preview-table-wrapper::-webkit-scrollbar-track,
+.users-table-wrapper::-webkit-scrollbar-track,
+.table-container::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb,
+.research-table-container::-webkit-scrollbar-thumb,
+.custom-table-container::-webkit-scrollbar-thumb,
+.preview-table-wrapper::-webkit-scrollbar-thumb,
+.users-table-wrapper::-webkit-scrollbar-thumb,
+.table-container::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+  transition: background-color 0.2s ease;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover,
+.research-table-container::-webkit-scrollbar-thumb:hover,
+.custom-table-container::-webkit-scrollbar-thumb:hover,
+.preview-table-wrapper::-webkit-scrollbar-thumb:hover,
+.users-table-wrapper::-webkit-scrollbar-thumb:hover,
+.table-container::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Ensure data tables don't squish excessively on smaller screens */
+@media (max-width: 991.98px) {
+  .research-table,
+  .custom-table,
+  .preview-table,
+  .final-table,
+  .progress-table,
+  .users-table,
+  table {
+    min-width: 800px;
+  }
 }

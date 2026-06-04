@@ -15,6 +15,7 @@ import {
   getDocumentContents,
   getDocumentDetail,
   getDocumentFields,
+  getResearchers,
 } from "../../api/documentApi";
 
 import SubstansiStep from "../../components/documents/steps/proposal/SubstansiStep";
@@ -216,20 +217,11 @@ const DocumentEditorPage = () => {
 
   const fetchDocumentDetailWithFallback = async (resId, docId) => {
     let res = null;
-
-    try {
-      res = await getNestedDocumentFullDetail(resId, docId);
-      return normalizeDocumentResponse(res);
-    } catch (nestedErr) {
-      console.warn(
-        "DEBUG: getNestedDocumentFullDetail gagal, fallback ke getDocumentFullDetail:",
-        nestedErr?.response?.data || nestedErr?.message
-      );
-    }
+    let success = false;
 
     try {
       res = await getDocumentFullDetail(docId);
-      return normalizeDocumentResponse(res);
+      success = true;
     } catch (fullErr) {
       console.warn(
         "DEBUG: getDocumentFullDetail gagal, fallback ke getDocumentDetail:",
@@ -237,7 +229,34 @@ const DocumentEditorPage = () => {
       );
     }
 
-    res = await getDocumentDetail(docId);
+    if (!success) {
+      try {
+        res = await getDocumentDetail(docId);
+        success = true;
+      } catch (detailErr) {
+        console.warn(
+          "DEBUG: getDocumentDetail gagal, fallback ke nested:",
+          detailErr?.response?.data || detailErr?.message
+        );
+      }
+    }
+
+    if (!success) {
+      res = await getNestedDocumentFullDetail(resId, docId);
+    }
+
+    // Bypass backend schema filtering by fetching the complete researchers list
+    if (res) {
+      try {
+        const fullResearchers = await getResearchers(docId);
+        if (fullResearchers && Array.isArray(fullResearchers)) {
+          res.researchers = fullResearchers;
+        }
+      } catch (rErr) {
+        console.warn("DEBUG: Gagal fetch full researchers:", rErr);
+      }
+    }
+
     return normalizeDocumentResponse(res);
   };
 
@@ -415,10 +434,10 @@ const DocumentEditorPage = () => {
             "";
 
           const defaultTitle = `${mappedType === "proposal"
-              ? "Proposal"
-              : mappedType === "kemajuan"
-                ? "Laporan Kemajuan"
-                : "Laporan Akhir"
+            ? "Proposal"
+            : mappedType === "kemajuan"
+              ? "Laporan Kemajuan"
+              : "Laporan Akhir"
             } - ${judulPenelitianParent}`;
 
           const mapping = {};
@@ -703,7 +722,6 @@ const DocumentEditorPage = () => {
 
         await updateNestedDocument(researchId, activeDocId, {
           judul: docTitle,
-          status_dokumen: "draft",
           items,
         });
 
@@ -741,7 +759,6 @@ const DocumentEditorPage = () => {
 
         await updateDocument(activeDocId, {
           judul: docTitle,
-          status_dokumen: "draft",
           items,
         });
       }
@@ -1033,8 +1050,19 @@ const DocumentEditorPage = () => {
 
     try {
       const docId = await handleSave(true);
+      const usableDocId = docId || activeDocumentId;
 
-      if (docId || activeDocumentId) {
+      if (usableDocId) {
+        try {
+          await checkDocumentStatus(usableDocId);
+          console.log("DEBUG: checkDocumentStatus dipanggil saat Simpan & Keluar");
+        } catch (statusErr) {
+          console.warn(
+            "DEBUG: checkDocumentStatus gagal saat Simpan & Keluar:",
+            statusErr?.response?.data || statusErr?.message
+          );
+        }
+
         navigateToResearchDetail();
       } else {
         alert("Gagal menyimpan draft. Silakan coba lagi.");

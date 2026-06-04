@@ -1,8 +1,5 @@
 import { documentApiClient } from "./axiosClient";
 
-
-
-
 export const getDocuments = async () => {
   const response = await documentApiClient.get("/documents/");
   return response.data;
@@ -112,7 +109,7 @@ export const exportDocumentPdf = async (documentId) => {
           err.response.data = json;
         }
       } catch (e) {
-        
+
       }
     }
     throw err;
@@ -134,21 +131,32 @@ export const getResearchers = async (documentId) => {
   return response.data;
 };
 
-export const createResearcher = async (documentId, data) => {
-  const response = await documentApiClient.post(`/documents/${documentId}/researchers/`, data);
+export const createResearcher = async (documentId, payload) => {
+  const response = await documentApiClient.post(`/documents/${documentId}/researchers/`, payload);
   return response.data;
 };
 
 
-export const addResearcher = createResearcher;
+export const addResearcher = async (documentId, payload) => {
+  const response = await documentApiClient.post(
+    `/documents/${documentId}/researchers/`,
+    payload
+  );
+  return response.data;
+};
 
-export const updateResearcher = async (documentId, researcherId, data) => {
-  const response = await documentApiClient.put(`/documents/${documentId}/researchers/${researcherId}`, data);
+export const updateResearcher = async (documentId, researcherId, payload) => {
+  const response = await documentApiClient.put(
+    `/documents/${documentId}/researchers/${researcherId}`,
+    payload
+  );
   return response.data;
 };
 
 export const deleteResearcher = async (documentId, researcherId) => {
-  const response = await documentApiClient.delete(`/documents/${documentId}/researchers/${researcherId}`);
+  const response = await documentApiClient.delete(
+    `/documents/${documentId}/researchers/${researcherId}`
+  );
   return response.data;
 };
 
